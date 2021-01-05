@@ -18,9 +18,21 @@ router.post("/create",
   check( "name", "El nombre es obligatorio" ).not().isEmpty(),
   check( "email", "El email es obligatorio" ).not().isEmpty(),
   check("password", "El password es obligatorio").not().isEmpty()
-],
+],authMid,
 
-AuthController.createUser)
+  AuthController.createUser )
+
+router.post("/recover",
+ [
+  check( "email", "El email es obligatorio" ).not().isEmpty()
+],
+AuthController.recover)
+
+router.post("/restore",
+ [
+  check( "password", "El password es obligatorio" ).not().isEmpty()
+],authMid,
+AuthController.restore)
 
 
 router.get("/",authMid,AuthController.authenticatedUser)

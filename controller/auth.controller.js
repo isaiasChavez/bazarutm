@@ -1,7 +1,10 @@
 const User = require('../models/User')
 const bcryptjs =  require('bcryptjs')
-const jwt = require('jsonwebtoken')
-const {Code_BadRequest,Code_InternalError,EXPIRE_TIME} = require('../types')
+const jwt = require( 'jsonwebtoken' )
+const nodemailer = require('./helpers/email')
+
+
+const {Code_BadRequest,Code_InternalError,EXPIRE_TIME,EXPIRE_TIME_EMAIL} = require('../types')
 const { MSG_user404, MSG_pass401, MSG_auth200 } = require( '../types/responses' )
 
 
@@ -75,9 +78,7 @@ exports.createUser = async (req, res) => {
   if (!errores.isEmpty()) {
     return res.status(400).json({ errores: errores.array() });
   }
-
   const { email, password, name } = req.body;
-
   //Validamos que el usuario y correo sean unicos
 
   try {
@@ -102,7 +103,7 @@ exports.createUser = async (req, res) => {
 
     const payload = {
       user: {
-        id: usuario.id,
+        id:uniqueEmail._id
       },
     };
     jwt.sign(
@@ -124,3 +125,81 @@ exports.createUser = async (req, res) => {
     res.status(400).send("Hubo un error");
   }
 };
+
+
+exports.recover = async (req, res) => {
+  const errores = validationResult(req);
+  if (!errores.isEmpty()) {
+    return res.status(400).json({ errores: errores.array() });
+  }
+  const { email} = req.body;
+  //Validamos que el correo exista
+  try {
+    let user = await User.findOne( { email } );
+    if (!user) {
+      return res.status(400).json({ msg: "Si existe un usuario con este correo llegará un email para hacer el cambio." });
+    }
+    
+
+    //Crear y firmar un JWT
+
+    const payload = {
+      user: {
+        id: user._id,
+        recover:true
+      },
+    };
+    jwt.sign(
+      payload,
+      process.env.SECRETWORD,
+      {
+        expiresIn: EXPIRE_TIME_EMAIL,
+      },
+      (error, token) => {
+        if (error) {
+          throw error;
+        }
+        //Enviar correo de recuperación
+        nodemailer.sendEmailRecover(res,{to:email,type:'recover',token})
+
+        //mensaje de confirmacion
+        res.json({ msg: "Si existe un usuario con esta correo se enviará un correo para realizar el cambio.",token });
+      }
+    );
+  } catch (error) {
+    console.log(error);
+    res.status(400).send("Hubo un error");
+  }
+};
+exports.restore = async ( req, res ) => {
+
+  const errores = validationResult(req);
+  const isRecover = req.recover
+  if (!errores.isEmpty()) {
+    return res.status(400).json({ errores: errores.array() });
+  }
+  if( !isRecover )
+  {
+    return res.status( 405).json({ errores: "No permitido" });
+  }
+  const idUser = req.user
+  
+  const { password } = req.body;
+  //Validamos que el usuario exista
+  try {
+    let user = await User.findOne( { _id:idUser } );
+    if (!user) {
+      return res.status(400).json({ msg: "No existe un usuario con el id proporcionado." });
+    }
+    const salt = await bcryptjs.genSalt(10);
+    user.password = await bcryptjs.hash(password, salt);
+    await User.findOneAndUpdate(idUser, { password });
+
+    res.status(200).json({ msg: "La contraseña se ha actualizado correctamente",status:"ok" });  
+  } catch (error) {
+    console.log(error);
+    res.status(400).send("Hubo un error");
+  }
+};
+
+
