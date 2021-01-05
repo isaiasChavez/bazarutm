@@ -179,7 +179,7 @@ exports.restore = async ( req, res ) => {
     return res.status(400).json({ errores: errores.array() });
   }
   
-  const idUser = req.user
+  const idUser = req.user.id
   
   const { password } = req.body;
   //Validamos que el usuario exista
