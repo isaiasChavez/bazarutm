@@ -16,6 +16,6 @@ module.exports = function (req,res,next) {
     }
     next()
   } catch (e) {
-    res.status(Code_Unauthorized).json({ msg: MSG_UNAUTHORIZED });
+    res.status(Code_Unauthorized).json({ msg: "Algo fue mal" });
   }
 }

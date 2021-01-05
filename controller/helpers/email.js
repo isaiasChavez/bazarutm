@@ -33,7 +33,7 @@ const plantillaRecover = token => {
      <div style="display:flex; flex-direction:column; justify-content:center; align-items:center;">
      <h1>Da click al siguente enlace para recuperar tu contraseña AMGEN.</h1>
      <h5>Si no has realizado esta petición ignora este mensaje.</h5>
-     <a href="https://devscaperooms.netlify.app/restore/t=${token}" style="font-weight:bold; text-decoration:none;cursor:pointer; border-radius:6px; padding:0.5rem; background:blue; color:white;"> Recuperar </a>
+     <a href="https://devscaperooms.netlify.app/restore/${token}" style="font-weight:bold; text-decoration:none;cursor:pointer; border-radius:6px; padding:0.5rem; background:blue; color:white;"> Recuperar </a>
      </div>
  </div>
 `
