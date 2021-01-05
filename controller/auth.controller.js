@@ -178,10 +178,7 @@ exports.restore = async ( req, res ) => {
   if (!errores.isEmpty()) {
     return res.status(400).json({ errores: errores.array() });
   }
-  if( !isRecover )
-  {
-    return res.status( 405).json({ errores: "No permitido" });
-  }
+  
   const idUser = req.user
   
   const { password } = req.body;
