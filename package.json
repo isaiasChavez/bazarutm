@@ -1,0 +1,31 @@
+{
+  "name": "scaperoom",
+  "version": "1.0.0",
+  "description": "Proyecto de scaperoom ",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon .",
+    "prod": "node ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://isaiaschavez@bitbucket.org/isaiaschavez/scaperooms.git"
+  },
+  "author": "Inmersys",
+  "license": "ISC",
+  "homepage": "https://bitbucket.org/isaiaschavez/scaperooms#readme",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "express-validator": "^6.8.0",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^5.11.8",
+    "nodemailer": "^6.4.17"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.6"
+  }
+}
