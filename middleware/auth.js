@@ -12,7 +12,7 @@ module.exports = function (req,res,next) {
     const cifrado = jwt.verify(token, process.env.SECRETWORD); 
     req.user = cifrado.user;
     if (cifrado.recover) {
-      req.recover = cifrado.user;
+      req.recover = cifrado.recover;
     }
     next()
   } catch (e) {
