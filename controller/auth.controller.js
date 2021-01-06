@@ -4,7 +4,7 @@ const jwt = require( 'jsonwebtoken' )
 const nodemailer = require('./helpers/email')
 
 
-const {Code_BadRequest,Code_InternalError,EXPIRE_TIME,EXPIRE_TIME_EMAIL} = require('../types')
+const {Code_BadRequest,Code_InternalError,EXPIRE_TIME,EXPIRE_TIME_EMAIL,EXPIRE_TIME_PASS_CHANGE} = require('../types')
 const { MSG_user404, MSG_pass401, MSG_auth200 } = require( '../types/responses' )
 
 
@@ -127,20 +127,20 @@ exports.createUser = async (req, res) => {
 };
 
 
+
+//Manda el correo pero no hace el cambio de contraseña
 exports.recover = async (req, res) => {
   const errores = validationResult(req);
   if (!errores.isEmpty()) {
     return res.status(400).json({ errores: errores.array() });
   }
   const { email} = req.body;
-  //Validamos que el correo exista
+  //Validamos que el usuario exista
   try {
     let user = await User.findOne( { email } );
     if (!user) {
       return res.status(400).json({ msg: "Si existe un usuario con este correo llegará un email para hacer el cambio." });
     }
-    
-
     //Crear y firmar un JWT
 
     const payload = {
@@ -153,7 +153,7 @@ exports.recover = async (req, res) => {
       payload,
       process.env.SECRETWORD,
       {
-        expiresIn: EXPIRE_TIME_EMAIL,
+        expiresIn: EXPIRE_TIME_PASS_CHANGE,
       },
       (error, token) => {
         if (error) {
@@ -171,26 +171,32 @@ exports.recover = async (req, res) => {
     res.status(400).send("Hubo un error");
   }
 };
+
+//Cambia la contraseña
 exports.restore = async ( req, res ) => {
 
   const errores = validationResult(req);
-  const isRecover = req.recover
+  const isRecover = req.user.recover
   if (!errores.isEmpty()) {
     return res.status(400).json({ errores: errores.array() });
   }
-  
+  if(!isRecover) return res.status(405).json({ errores:'no permitido'});
   const idUser = req.user.id
   
   const { password } = req.body;
   //Validamos que el usuario exista
   try {
-    let user = await User.findOne( { _id:idUser } );
+    let user = await User.findOne( { _id: idUser } );
+    console.log("Usuario encontrado: ",user);
     if (!user) {
       return res.status(400).json({ msg: "No existe un usuario con el id proporcionado." });
     }
+    
     const salt = await bcryptjs.genSalt(10);
     user.password = await bcryptjs.hash(password, salt);
-    await User.findOneAndUpdate(idUser, { password });
+    
+    const responseUpdate = await User.findOneAndUpdate( idUser, { password } );
+    console.log("responseUpdate: ",responseUpdate);
 
     res.status(200).json({ msg: "La contraseña se ha actualizado correctamente",status:"ok" });  
   } catch (error) {
