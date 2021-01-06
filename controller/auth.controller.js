@@ -193,9 +193,9 @@ exports.restore = async ( req, res ) => {
     }
     
     const salt = await bcryptjs.genSalt(10);
-    user.password = await bcryptjs.hash(password, salt);
+    let newpassword = await bcryptjs.hash(password, salt);
     
-    const responseUpdate = await User.findOneAndUpdate( idUser, { password } );
+    const responseUpdate = await User.findOneAndUpdate( idUser, { password:newpassword } );
     console.log("responseUpdate: ",responseUpdate);
 
     res.status(200).json({ msg: "La contraseña se ha actualizado correctamente",status:"ok" });  
