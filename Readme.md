@@ -7,6 +7,32 @@ Corvofarma es un proyecto de universidad en el cual tratamos de vender recetas d
 ##### PostgreSQL
 ##### Express Js
 
+## Descarga
+### Git
+Utilizaremos mucho git, para instalarlo solo deben ir a la pagina oficial e instalarlo como cualquier programa siguiente siguiente siguiente
+##### [Enlace a la página de Git](https://git-scm.com/) 
+Una vez instalado verificamos que se haya instalado correctamente corriendo el siguiente comando en la terminal
+```bash
+git --version
+```
+debe dar algo como esto 
+```bash
+git version 2.28.0.windows.1
+```
+
+Una vez instalado es necesario moverse por consola a la ruta/carpeta en la cual decidan clonar el proyecto
+por ejemplo **C:\Users\isaia\Desktop\universidad\desarrollo_web\corvofarma\back>**
+ una vez ahí ejecutan el siguiente comando 
+
+```bash
+git clone https://github.com/isaiasChavez/corvofarma_back.git
+```
+esto debe clonar el proyecto, después solo hay que moverse a la raiz del proyecto
+
+```bash
+cd corvofarma_back
+```
+
 ## Instalación
 ### Yarn 
 Para instalarlo necesitan tener [Nodejs](https://nodejs.org/es/) instalado en su máquina  
