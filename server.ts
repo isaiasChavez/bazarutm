@@ -1,18 +1,28 @@
-import express from 'express';
-import authRouter from './src/routes/auth.route';
-import userRouter from './src/routes/user.route';
-const app = express();
-const port = 3000;
+import express from 'express'
+import authRouter from './src/routes/auth.route'
+import userRouter from './src/routes/user.route'
+import { createConnection } from 'typeorm'
 
-app.use("/api/auth",authRouter)
-app.use("/api/user",userRouter)
+const app = express()
+const port = 3000
 
-app.get('/', (req, res) => {
-  res.send('The sedulous hyena ate the antelope!');
-});
-app.listen(port, () => {
- /*  if (err) {
-    return console.error(err);
-  } */
-  return console.log(`server is listening on ${port}`);
-});
+app.use('/api/auth', authRouter)
+app.use('/api/user', userRouter)
+
+const main = async () => {
+  try {
+    const connection = await createConnection()
+    if (!connection.isConnected) {
+      throw new Error("DataBase is disconected"); 
+    }else{
+      console.log("DataBase is connected"); 
+    }
+    app.listen(port, () => {
+      console.log("================================")
+      return console.log(`Server is listening on ${port}`)
+    })
+  } catch (error) {
+    console.log(`Error: ${error}`)
+  }
+}
+main()

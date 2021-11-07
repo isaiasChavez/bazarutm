@@ -5,10 +5,10 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node dist/app.js",
     "start:dev": "tsc && node dist/server.js",
     "migration:generate": "ts-node node_modules/typeorm/cli.js migration:generate --config ./ormconfig.js --name",
-    "migration:run": "ts-node node_modules/typeorm/cli.js migration:run --config ./ormconfig.js",
-    "start": "tsc && node dist/app.js"
+    "migration:run": "ts-node node_modules/typeorm/cli.js migration:run --config ./ormconfig.js"
   },
   "repository": {
     "type": "git",
