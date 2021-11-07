@@ -39,7 +39,7 @@ Para instalarlo necesitan tener [Nodejs](https://nodejs.org/es/) instalado en su
 Una vez instalado correr el comando, junto con nodejs se incluye un gestor de paquetes llamado **NPM**  
 Para el caso de este proyecto usaremos una versión mejorada llamada **Yarn** que instalaremos de la siguiente forma por linea de comandos
 ```bash
-npm install --global yarn  
+npm install -g yarn  
 ```
 ### Instalación de paquetes
 Nodejs Funciona con paquetes que cumplen funcionalidades específicas pero estos no son descargados con el repositorio ya que tienen un peso bastante elevado por lo que deben ser instalados una vez que se haya descargado el código fuente principal del repositorio  
