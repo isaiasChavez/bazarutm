@@ -6,7 +6,6 @@ exports.Code_Unauthorized = 401
  exports.EXPIRE_TIME_EMAIL = hora // 1 HORA
  exports.EXPIRE_TIME_PASS_CHANGE = hora // 1 HORA
 
-module.export
 
 /*
 code 1 
