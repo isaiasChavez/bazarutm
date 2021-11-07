@@ -1,5 +1,5 @@
 import { getManager, Repository } from "typeorm";
-import { Producto } from "../Entities/Producto.entity";
+import { Producto } from "../Entities/Producto";
 
 
 export class ProductoRepository{

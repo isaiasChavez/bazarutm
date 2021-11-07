@@ -1,7 +1,7 @@
 import bcryptjs from 'bcryptjs'
 import jwt from 'jsonwebtoken'
 import { Repository } from 'typeorm'
-import { Producto } from '../database/Entities/Producto.entity'
+import { Producto } from '../database/Entities/Producto'
 import { ProductoRepository } from '../database/Repository/Producto.repository'
 
 class ProductController {
