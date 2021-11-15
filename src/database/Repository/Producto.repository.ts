@@ -3,7 +3,7 @@ import { Producto } from "../Entities/Producto";
 
 
 export class ProductoRepository{
- entity():Repository<Producto>{
+ repository():Repository<Producto>{
    return getManager().getRepository(Producto)
  }
 }

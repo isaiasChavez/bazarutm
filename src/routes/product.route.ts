@@ -1,11 +1,21 @@
-import express from 'express'
-import authMid from '../middleware/auth'
-import { check } from "express-validator"
+import {Router} from 'express'
 import ProductController from '../controller/product.controller'
-const router = express.Router()
 
-const productController = new ProductController()
+class ProductRoutes {
+  public router: Router
+  protected controller: ProductController
 
-router.post( "/",productController.addProduct )
+  constructor () {
+    this.router = Router()
+    this.controller = new ProductController()
+    this.config()
+  }
+  private config (): void {
+    this.router.post('/',  this.controller.addProduct)
+  }
+}
+
+
+
  
-export default router
+export default new ProductRoutes().router

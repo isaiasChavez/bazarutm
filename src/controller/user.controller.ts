@@ -1,15 +1,17 @@
-import bcryptjs from 'bcryptjs'
-import jwt from 'jsonwebtoken'
+import {Request,Response} from 'express';
 
-const UserController ={
 
-  addUsers:async (req,res) =>{
+class UserController{
+
+
+  constructor(){
+   }
+  public addUsers = async (req:Request,res:Response):Promise<void> =>{
     try
     {   
       res.json({ 
         msg:"Si",
         token:"1" })
-        
       } catch (e) {
         
       }

@@ -1,5 +1,4 @@
-import bcryptjs from 'bcryptjs'
-import jwt from 'jsonwebtoken'
+import {Request,Response} from 'express';
 import { Repository } from 'typeorm'
 import { Producto } from '../database/Entities/Producto'
 import { ProductoRepository } from '../database/Repository/Producto.repository'
@@ -7,11 +6,12 @@ import { ProductoRepository } from '../database/Repository/Producto.repository'
 class ProductController {
 
  private productRepository: Repository<Producto>
+ 
  constructor(){
-  this.productRepository = new ProductoRepository().entity() 
+  this.productRepository = new ProductoRepository().repository() 
  }
 
- addProduct= async (req, res)=> {
+ addProduct= async (req:Request,res:Response)=> {
    
     try {
       

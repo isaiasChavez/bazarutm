@@ -1,16 +1,19 @@
-import express from'express'
-import { check } from "express-validator"
+import { Router } from 'express'
 import authMid from '../middleware/auth'
 import UserController from '../controller/user.controller'
 
-const router = express.Router()
+class UserRoutes {
+  public router: Router
+  protected controller: UserController
 
-router.post( "/",
- authMid,
- UserController.addUsers )
- 
+  constructor () {
+    this.router = Router()
+    this.controller = new UserController()
+    this.config()
+  }
+  private config (): void {
+    this.router.post('/', authMid, this.controller.addUsers)
+  }
+}
 
-
-// router.get("/",authMid,AuthController.authenticatedUser)
-
-export default router
+export default new UserRoutes().router
