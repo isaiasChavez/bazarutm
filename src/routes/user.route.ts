@@ -12,7 +12,9 @@ class UserRoutes {
     this.config()
   }
   private config (): void {
-    this.router.post('/', authMid, this.controller.addUsers)
+    this.router.post('/', authMid, this.controller.createUser)
+    this.router.put('/', authMid, this.controller.updateUser)
+    this.router.delete('/:email', authMid, this.controller.deleteUser)
   }
 }
 
