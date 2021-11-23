@@ -1,3 +1,5 @@
+import {typesUser} from '../../types'
+
 export interface CreateUserDTO{
   email: string
   nickname: string
@@ -6,4 +8,5 @@ export interface CreateUserDTO{
   genero:boolean
   active:boolean
   avatar:string
+  type:typesUser
 }

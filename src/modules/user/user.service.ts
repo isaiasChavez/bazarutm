@@ -1,5 +1,5 @@
 import { Repository } from 'typeorm'
-import { User } from '../database/Entities/user.entity'
+import { User } from './user.entity'
 import { CreateUserDTO } from './user.dto'
 
 interface ServiceReponse {

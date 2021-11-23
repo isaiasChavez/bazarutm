@@ -1,5 +1,5 @@
 import {Router} from 'express'
-import ProductController from '../controller/product.controller'
+import ProductController from './product.controller'
 
 class ProductRoutes {
   public router: Router

@@ -5,10 +5,11 @@ module.exports = {
   username: 'postgres',
   password: 'root',
   database: 'corvofarma',
-  entities: ['./dist/src/database/Entities/*.entity.js'],
+  entities: ['./dist/src/modules/**/*.entity.js'],
   migrationTableName: 'migrations',
-  migrations: ['dist/src/database/migrations/*{.ts,.js}'],
-  //ssl: true,
+  migrations: [
+      "src/migration/**/*.ts"
+   ],  //ssl: true,
   extra: {
     max: 25,
     min: 1,

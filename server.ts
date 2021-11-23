@@ -1,7 +1,6 @@
 import express,{Application, json, urlencoded} from 'express'
-
-import authRouter from './src/routes/auth.route'
-import userRouter from './src/routes/user.route'
+import authRouter from './src/modules/auth/auth.route'
+import userRouter from './src/modules/user/user.route'
 import { Connection, createConnection } from 'typeorm'
 
 import morgan from 'morgan'
@@ -20,7 +19,6 @@ class Server {
     try {
       this.app = express()
       this.port = init.port
-      this.lauchServer()
     } catch (error) {
       console.log(`Error: ${error}`)
     }
@@ -62,3 +60,4 @@ class Server {
 const port:number = parseInt(process.env.PORT || '3000') 
 
 const server = new Server({port})
+server.lauchServer()

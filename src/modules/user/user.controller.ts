@@ -1,8 +1,9 @@
 import { Request, Response } from 'express'
-import UserService from '../services/user.service';
+import UserService from './user.service';
 import {ServerResponse} from '../../types';
-import {CreateUserDTO} from '../services/user.dto'
-import { User } from 'src/database/Entities/user.entity';
+import {CreateUserDTO} from './user.dto'
+import { User } from 'src/modules/user/user.entity';
+import {typesUser} from '../../types';
 class UserController {
   userService: UserService;
   constructor () {
@@ -19,6 +20,7 @@ class UserController {
           genero:false,
           password:'password',
           nickname:"Something",
+          type:typesUser.admin
       }
       this.userService.createUser(newUser)
 
