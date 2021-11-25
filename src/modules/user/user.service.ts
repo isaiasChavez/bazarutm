@@ -1,4 +1,3 @@
-import { Repository } from 'typeorm'
 import { User } from './user.entity'
 import { CreateUserDTO } from './user.dto'
 

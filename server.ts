@@ -1,20 +1,24 @@
 import express,{Application, json, urlencoded} from 'express'
+import { Connection, createConnection } from 'typeorm'
 import authRouter from './src/modules/auth/auth.route'
 import userRouter from './src/modules/user/user.route'
-import { Connection, createConnection } from 'typeorm'
+import productRoute from './src/modules/product/product.route'
+import saleRouter from './src/modules/sale/sale.router'
 
 import morgan from 'morgan'
 import cors from 'cors'
 
 class Server {
-  app:Application
-  connection: Connection
-  endpoints = {
-    baseRoute: '',
+  private app:Application
+  private connection: Connection
+  private readonly endpoints = {
+    baseRoute: '/',
     authentication: '/api/auth',
-    user: '/api/user'
+    user: '/api/user',
+    products: '/api/product',
+    sale: '/api/sale',
   }
-  port: number
+  private port: number
   constructor (init: { port: number }) {
     try {
       this.app = express()
@@ -44,6 +48,10 @@ class Server {
     
     this.app.use(this.endpoints.authentication, authRouter)
     this.app.use(this.endpoints.user, userRouter) 
+    this.app.use(this.endpoints.products, productRoute) 
+    this.app.use(this.endpoints.sale, saleRouter) 
+    
+    
 
   }
 

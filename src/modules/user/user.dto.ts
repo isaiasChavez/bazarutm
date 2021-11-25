@@ -1,12 +1,13 @@
 import {typesUser} from '../../types'
+import { Role } from '../role/role.entity';
 
 export interface CreateUserDTO{
   email: string
-  nickname: string
+  name: string
+  lastname: string
   birthday:Date
-  password: string
-  genero:boolean
-  active:boolean
-  avatar:string
+  gender:boolean
   type:typesUser
+  password: string
+  role:Role
 }

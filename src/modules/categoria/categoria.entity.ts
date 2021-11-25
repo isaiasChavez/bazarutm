@@ -3,13 +3,14 @@ import {
   Column,
   Entity,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn
 } from 'typeorm'
 import { Producto } from '../product/product.entity'
 import { Sale } from '../sale/sale.entity'
 
 @Entity()
-export class DetailSale extends BaseEntity {
+export class Category extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number
 
@@ -19,16 +20,9 @@ export class DetailSale extends BaseEntity {
     length: 50
   })
   name: string
-
-  @ManyToOne(
-    () => Producto,
-    product => product.detailssales
-  )
-  product: Producto
   
-  @ManyToOne(
-    () => Sale,
-    sale => sale.detailsales
-  )
-  sale: Sale
+  @OneToMany(() => Producto, product => product.category)
+  product: Producto[];
+
+  
 }
