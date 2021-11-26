@@ -1,6 +1,6 @@
 import {ServiceReponse} from '../../types'
 import ErrorHelper from '../../helpers/error.helper';
-
+import {CreateProductDTO,UpdateProductDTO} from './product.dto';
 class ProductService {
   statusOk
   private errorHelper: ErrorHelper
@@ -15,13 +15,11 @@ class ProductService {
       
   }
 
-  createProduct = async ():Promise<ServiceReponse> => {
+  createProduct = async (createProductDTO:CreateProductDTO):Promise<ServiceReponse> => {
     try {
-   
+
       
     } catch (error) {
-      
-    
       return {
         status: 500,
         msg: this.errorHelper.genericHandler("createProduct",error)
@@ -29,7 +27,7 @@ class ProductService {
     }
   }
 
-  deleteProduct  = async (): Promise<ServiceReponse>=> {
+  deleteProduct  = async (productUuid:string): Promise<ServiceReponse>=> {
     try {
    
     } catch (error) {
@@ -40,7 +38,7 @@ class ProductService {
     }
   }
 
-   updateProduct  = async(): Promise<ServiceReponse>=> {
+  updateProduct  = async(updateProductDTO:UpdateProductDTO): Promise<ServiceReponse>=> {
     try {
    
     } catch (error) {
@@ -50,7 +48,7 @@ class ProductService {
       }
     }
   }
-  getAllProducts =  async(req: Request, res: Response)=>  {
+  getAllProducts =  async()=>  {
    try {
    
     } catch (error) {
@@ -61,7 +59,7 @@ class ProductService {
     }
   }
 
-  getProduct=   async (req: Request, res: Response)=> {
+  getProduct = async ()=> {
     try {
    
     } catch (error) {
@@ -71,7 +69,7 @@ class ProductService {
       }
     }
   }
-  getProductsUser  = async(req: Request, res: Response)=> {
+  getProductsUser  = async()=> {
     try {
       
     } catch (error) {
