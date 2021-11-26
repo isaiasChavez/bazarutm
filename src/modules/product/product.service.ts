@@ -1,81 +1,83 @@
 import {ServiceReponse} from '../../types'
+import ErrorHelper from '../../helpers/error.helper';
 
 class ProductService {
   statusOk
+  private errorHelper: ErrorHelper
+
   constructor () {
     this.statusOk = {
         status: 400,
         msg: 'ok'
       }
+      this.errorHelper = new ErrorHelper(this)
+
+      
   }
 
-  async createProduct (): Promise<ServiceReponse> {
+  createProduct = async ():Promise<ServiceReponse> => {
     try {
    
       
     } catch (error) {
-      console.log('Error creating product')
+      
+    
       return {
         status: 500,
-        msg: 'Error creating product'
+        msg: this.errorHelper.genericHandler("createProduct",error)
       }
     }
   }
 
-  async deleteProduct (): Promise<ServiceReponse> {
+  deleteProduct  = async (): Promise<ServiceReponse>=> {
     try {
    
     } catch (error) {
-      console.log('Error deleting product',{error})
       return {
         status: 500,
-        msg: 'Error deleting product'
+        msg: this.errorHelper.genericHandler("deleteProduct",error)
       }
     }
   }
 
-  async updateProduct (): Promise<ServiceReponse> {
+   updateProduct  = async(): Promise<ServiceReponse>=> {
     try {
    
     } catch (error) {
-      console.log('Error updating product',{error})
       return {
         status: 500,
-        msg: 'Error updating product'
+        msg: this.errorHelper.genericHandler("updateProduct",error)
       }
     }
   }
-  async getAllProducts (req: Request, res: Response) {
+  getAllProducts =  async(req: Request, res: Response)=>  {
    try {
    
     } catch (error) {
-      console.log('Error creating product')
       return {
         status: 500,
-        msg: 'Error creating product'
+        msg: this.errorHelper.genericHandler("getAllProducts",error)
       }
     }
   }
 
-  async getProduct (req: Request, res: Response) {
+  getProduct=   async (req: Request, res: Response)=> {
     try {
    
     } catch (error) {
-      console.log('Error creating product')
       return {
         status: 500,
-        msg: 'Error creating product'
+        msg: this.errorHelper.genericHandler("getProduct",error)
       }
     }
   }
-  async getProductsUser (req: Request, res: Response) {
+  getProductsUser  = async(req: Request, res: Response)=> {
     try {
-   
+      
     } catch (error) {
-      console.log('Error getting Products product')
       return {
         status: 500,
-        msg: 'Error creating product'
+        msg: this.errorHelper.genericHandler("getProductsUser",error)
       }
     }
   }

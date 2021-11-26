@@ -1,74 +1,90 @@
 import { Request, Response } from 'express'
 import { Producto } from './product.entity'
 import ProductService from './product.service'
-import ErrorHelper from '../../helpers/error.helper';
+import ErrorHelper from '../../helpers/error.helper'
 
 class ProductController {
-  private productService: ProductService  
+  private productService: ProductService
   private errorHelper: ErrorHelper
   constructor () {
-    console.log(this)
     this.productService = new ProductService()
     this.errorHelper = new ErrorHelper(this)
-    this.addProduct = this.addProduct.bind(this)
   }
 
-  async getAllProducts (req: Request, res: Response) {
+  getAllProducts = async (req: Request, res: Response): Promise<void> => {
     try {
-      res.json({
-        msg: 'Si',
-        token: '1'
-      })
-    } catch (e) {}
-  }
-
-  async getProduct (req: Request, res: Response) {
-    try {
-      res.json({
-        msg: 'Si',
-        token: '1'
-      })
-    } catch (e) {}
-  }
-  async getProductsUser (req: Request, res: Response) {
-    try {
-      
       res.json({
         msg: 'Si',
         token: '1'
       })
     } catch (e) {
+      res
+        .status(500)
+        .json({ msg: this.errorHelper.genericHandler('getAllProducts', e) })
     }
   }
 
-  addProduct = (req: Request, res: Response)=> {
-
+  getProduct = async (req: Request, res: Response): Promise<void> => {
     try {
       res.json({
         msg: 'Si',
         token: '1'
       })
-      
     } catch (e) {
-        res.status(500).json({msg:this.errorHelper.genericHandler("addProduct",e)})
+      res
+        .status(500)
+        .json({ msg: this.errorHelper.genericHandler('getProduct', e) })
+    }
+  }
+  getProductsUser = async (req: Request, res: Response): Promise<void> => {
+    try {
+      res.json({
+        msg: 'Si',
+        token: '1'
+      })
+    } catch (e) {
+      res
+        .status(500)
+        .json({ msg: this.errorHelper.genericHandler('getProductsUser', e) })
     }
   }
 
-  async deleteProduct (req: Request, res: Response) {
+  addProduct = async (req: Request, res: Response): Promise<void> => {
     try {
       res.json({
         msg: 'Si',
         token: '1'
       })
-    } catch (e) {}
+    } catch (e) {
+      res
+        .status(500)
+        .json({ msg: this.errorHelper.genericHandler('addProduct', e) })
+    }
   }
-  async updateProduct (req: Request, res: Response) {
+
+  deleteProduct = async (req: Request, res: Response): Promise<void> => {
     try {
       res.json({
         msg: 'Si',
         token: '1'
       })
-    } catch (e) {}
+    } catch (e) {
+      res
+        .status(500)
+        .json({ msg: this.errorHelper.genericHandler('deleteProduct', e) })
+    }
+  }
+  updateProduct = async (req: Request, res: Response): Promise<void> => {
+    try {
+      res.json({
+        msg: 'Si',
+        token: '1'
+      })
+    } catch (e) {
+      res
+        .status(500)
+        .json({ msg: this.errorHelper.genericHandler('updateProduct', e) })
+    }
   }
 }
 
