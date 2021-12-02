@@ -2,13 +2,14 @@ import { Request, Response } from 'express'
 import { Producto } from './product.entity'
 import ProductService from './product.service'
 import ErrorHelper from '../../helpers/error.helper'
+import { Controller } from '../interfaces/service.interface'
 
-class ProductController {
+class ProductController extends Controller {
   private productService: ProductService
-  private errorHelper: ErrorHelper
+  
   constructor () {
+    super()
     this.productService = new ProductService()
-    this.errorHelper = new ErrorHelper(this)
   }
 
   getAllProducts = async (req: Request, res: Response): Promise<void> => {
@@ -20,7 +21,7 @@ class ProductController {
     } catch (e) {
       res
         .status(500)
-        .json({ msg: this.errorHelper.genericHandler('getAllProducts', e) })
+        .json({ msg: this.eH.genericHandler('getAllProducts', e) })
     }
   }
 
@@ -33,7 +34,7 @@ class ProductController {
     } catch (e) {
       res
         .status(500)
-        .json({ msg: this.errorHelper.genericHandler('getProduct', e) })
+        .json({ msg: this.eH.genericHandler('getProduct', e) })
     }
   }
   getProductsUser = async (req: Request, res: Response): Promise<void> => {
@@ -45,7 +46,7 @@ class ProductController {
     } catch (e) {
       res
         .status(500)
-        .json({ msg: this.errorHelper.genericHandler('getProductsUser', e) })
+        .json({ msg: this.eH.genericHandler('getProductsUser', e) })
     }
   }
 
@@ -58,7 +59,7 @@ class ProductController {
     } catch (e) {
       res
         .status(500)
-        .json({ msg: this.errorHelper.genericHandler('addProduct', e) })
+        .json({ msg: this.eH.genericHandler('addProduct', e) })
     }
   }
 
@@ -71,7 +72,7 @@ class ProductController {
     } catch (e) {
       res
         .status(500)
-        .json({ msg: this.errorHelper.genericHandler('deleteProduct', e) })
+        .json({ msg: this.eH.genericHandler('deleteProduct', e) })
     }
   }
   updateProduct = async (req: Request, res: Response): Promise<void> => {
@@ -83,7 +84,7 @@ class ProductController {
     } catch (e) {
       res
         .status(500)
-        .json({ msg: this.errorHelper.genericHandler('updateProduct', e) })
+        .json({ msg: this.eH.genericHandler('updateProduct', e) })
     }
   }
 }

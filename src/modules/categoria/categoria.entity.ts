@@ -2,12 +2,12 @@ import {
   BaseEntity,
   Column,
   Entity,
-  ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn
 } from 'typeorm'
 import { Producto } from '../product/product.entity'
-import { Sale } from '../sale/sale.entity'
+import {CategoriesEnum} from '../../types'
+import { Publication } from '../publication/publication.entity'
 
 @Entity()
 export class Category extends BaseEntity {
@@ -15,14 +15,16 @@ export class Category extends BaseEntity {
   id: number
 
   @Column({
-    type: 'varchar',
-    nullable: false,
-    length: 50
+    type: 'enum',
+    enum: CategoriesEnum,
+    default: CategoriesEnum.Others,
+    nullable: false
   })
   name: string
+
   
-  @OneToMany(() => Producto, product => product.category)
-  product: Producto[];
+  @OneToMany(() => Publication, publication => publication.category)
+  publication: Publication[];
 
   
 }

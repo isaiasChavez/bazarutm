@@ -1,8 +1,24 @@
+import { ValidationError } from "class-validator"
+
 class ErrorService {
   private className: any
   constructor(className: Object) {
     this.className = className.constructor.name
   }
+
+
+
+  validationHandler(trigger: string, error: ValidationError[], message?: string): string {
+    let errorString:string = "The following fields have irregularities: " 
+    error.map((error:ValidationError)=>{
+      errorString += `- ${error.property}: `
+      for (const key in error.constraints)errorString += ` ${key} `
+      errorString += ` - `
+    })
+    return errorString
+  }
+
+  
   genericHandler(trigger: string, error: Error, message?: string): string {
     return this.genericHandlerDevelopment(trigger, error, message)
   }

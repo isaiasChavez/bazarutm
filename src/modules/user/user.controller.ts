@@ -1,86 +1,77 @@
 import { Request, Response } from 'express'
 import UserService from './user.service'
 import { ServerResponse } from '../../types'
-import { CreateUserDTO } from './user.dto'
-import { typesUser } from '../../types'
-import { Role } from '../role/role.entity'
-class UserController {
-  userService: UserService
+import { CreateUserDTO, GetUserProfileDTO, UpdateUserDTO } from './user.dto'
+import { validateOrReject } from 'class-validator'
+import { Controller } from '../interfaces/service.interface'
+
+class UserController extends Controller {
+  private userService: UserService
+  private firsValueRes = { status: 400, data: null, msg: 'ok' }
   constructor () {
+    super()
     this.userService = new UserService()
   }
   public createUser = async (req: Request, res: Response): Promise<void> => {
     try {
-      const data: CreateUserDTO = req.body
-      console.log({data})
-      if (
-        !data.name ||
-        !data.birthday ||
-        data.gender===null ||
-        !data.password ||
-        !data.name ||
-        !data.lastname ||
-        !data.type
-      ) {
-        res.status(401).json({
-          msg: 'Faltan datos!'
+      let response: ServerResponse = this.firsValueRes
+      const data = new CreateUserDTO(req.body)
+      await validateOrReject(data)
+        .then(async () => {
+          response = await this.userService.create(data)
         })
-        return
-      }
-
-
-      const role:Role = await Role.findOne({ 
-        where:{
-          name:typesUser.user
-        }
-      })
-
-      const newUser: CreateUserDTO = {
-        email: data.email,
-        birthday: new Date(),
-        gender: data.gender,
-        password: data.password,
-        name: data.name,
-        lastname: data.lastname,
-        type: typesUser.user,
-        role
-
-      }
-
-      await this.userService.createUser(newUser)
-
-      const response: ServerResponse = {
-        status: 400,
-        data: null,
-        msg: 'ok'
-      }
-
-      console.log("Vamos de nuevo")
-      res.status(400).json(response)
-
+        .catch(e => {
+          response.msg = this.eH.validationHandler('createUser', e)
+        })
+      res.status(response.status).json(response)
+      return
     } catch (e) {
-      res.status(500).json({
-        msg: 'Error!'
-      })
+      res.status(500).json({ msg: this.eH.genericHandler('createUser', e) })
     }
   }
   public updateUser = async (req: Request, res: Response): Promise<void> => {
     try {
-      console.log(req.body)
-
-      const response: ServerResponse = {
-        status: 400,
-        data: null,
-        msg: 'ok'
-      }
-
-      res.status(400).json(response)
+      let response: ServerResponse = this.firsValueRes
+      const data = new UpdateUserDTO(req.body)
+      await validateOrReject(data)
+        .then(async () => {
+          console.log("OK")
+          // response = await this.userService.update(data)
+        })
+        .catch(e => {
+          response.msg = this.eH.validationHandler('updateUser', e)
+        })
+      res.status(response.status).json(response)
+      return
     } catch (e) {
       res.status(500).json({
         msg: 'Error!'
       })
     }
   }
+  public getUserProfile = async (
+    req: Request,
+    res: Response
+  ): Promise<void> => {
+    try {
+      let response: ServerResponse = this.firsValueRes
+      const email: string = req.params.email
+
+      const getProfileDTO = new GetUserProfileDTO(email)
+      await validateOrReject(getProfileDTO)
+        .then(async () => {
+          response = await this.userService.getUserProfile(getProfileDTO)
+        })
+        .catch(e => {
+          response.msg = this.eH.validationHandler('getUserProfile', e)
+        })
+      res.status(response.status).json(response)
+      return
+    } catch (e) {
+      res.status(500).json({ msg: this.eH.genericHandler('getUserProfile', e) })
+    }
+  }
+
   public deleteUser = async (req: Request, res: Response): Promise<void> => {
     try {
       console.log(req.params)
@@ -89,7 +80,7 @@ class UserController {
       if (!userEmail) {
         throw new Error('Falta el email')
       }
-      const status = await this.userService.deleteUser(userEmail)
+      const status = await this.userService.delete(userEmail)
       const response: ServerResponse = {
         status: status.status,
         data: null,

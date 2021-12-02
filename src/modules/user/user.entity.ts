@@ -1,35 +1,26 @@
 import {
   BaseEntity,
   Column,
-  CreateDateColumn,
   Entity,
+  Generated,
+  JoinColumn,
   ManyToOne,
-  OneToMany,
+  OneToOne,
   PrimaryGeneratedColumn
 } from 'typeorm'
 import { Role } from '../role/role.entity'
-import { Sale } from '../sale/sale.entity'
 import { CreateUserDTO } from './user.dto'
 import { typesUser } from '../../types'
+import { Profile } from '../profile/profile.entity'
 
 @Entity()
-export class User extends BaseEntity implements CreateUserDTO {
+export class User extends BaseEntity  {
   @PrimaryGeneratedColumn()
   id: number
 
-  @Column({
-    type: 'varchar',
-    nullable: false,
-    length: 50
-  })
-  name: string
-
-  @Column({
-    type: 'varchar',
-    nullable: false,
-    length: 100
-  })
-  lastname: string
+ @Column()
+ @Generated("uuid")
+    uuid: string;
 
   @Column({
     type: 'varchar',
@@ -37,13 +28,6 @@ export class User extends BaseEntity implements CreateUserDTO {
     length: 100
   })
   email: string
-
-  @Column({
-    type: 'boolean',
-    nullable: false,
-    default: true
-  })
-  gender: boolean
 
   @Column({
     type: 'enum',
@@ -54,37 +38,21 @@ export class User extends BaseEntity implements CreateUserDTO {
   type: typesUser
 
   @Column({
-    type: 'timestamp',
-    nullable: false
-  })
-  birthday: Date
-
-  @Column({
     type: 'varchar',
     nullable: false,
     length: 100
   })
   password: string
 
-  @Column({
-    type: 'boolean',
-    nullable: false,
-    default: true,
-  })
-  active: string
-
-  @CreateDateColumn()
-  CREATED_AT: string
-
-  @OneToMany(
-    () => Sale,
-    sale => sale.user
-  )
-  sales: Sale[]
-
   @ManyToOne(
     () => Role,
     role => role.user
   )
   role: Role
+
+
+   @OneToOne(() => Profile)
+    @JoinColumn()
+    profile: Profile;
+
 }

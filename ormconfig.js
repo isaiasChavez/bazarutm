@@ -4,7 +4,7 @@ module.exports = {
   port: '5432',
   username: 'postgres',
   password: 'root',
-  database: 'corvofarma',
+  database: 'bazarutm',
   entities: ['./dist/src/modules/**/*.entity.js'],
   migrationTableName: 'migrations',
   migrations: [

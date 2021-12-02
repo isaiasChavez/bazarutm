@@ -1,38 +1,33 @@
-import {Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn} from 'typeorm';
-import { Category } from '../categoria/categoria.entity';
-import { DetailSale } from '../detailsale/detailsale.entity';
+import {
+  Column,
+  Entity,
+  ManyToOne,
+  OneToMany,
+  OneToOne,
+  PrimaryGeneratedColumn
+} from 'typeorm'
+import { Asset } from '../asset/asset.entity'
+import { Category } from '../categoria/categoria.entity'
+import { Publication } from '../publication/publication.entity'
+import { StatusProduct } from './statusproduct/statusproduct.entity'
 
 @Entity()
-export class Producto{
- @PrimaryGeneratedColumn()
- id:number;
-
- @Column({
-  type:"varchar",
-  nullable:false,
-  length:50
- })
- nombre:string;
-
- @Column({
-  type:"varchar",
-  nullable:false,
-  length:150
- })
-
- image:string;
-
-  @OneToMany(() => DetailSale, detailsale => detailsale.product)
-    detailssales: DetailSale[];
-
+export class Producto {
+  @PrimaryGeneratedColumn()
+  id: number
 
   @ManyToOne(
-    () => Category,
-    category => category.product
+    () => StatusProduct,
+    statusProduct => statusProduct.product
   )
-  category: Category 
+  statusProduct: StatusProduct
 
- 
- 
-
+  @OneToMany(
+    () => Asset,
+    asset => asset.product
+  )
+  assets: Asset[]
+  
+  @OneToOne(()=> Publication,publication=> publication.producto)
+  publication:Publication
 }

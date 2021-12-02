@@ -3,8 +3,11 @@ import { Connection, createConnection } from 'typeorm'
 import authRouter from './src/modules/auth/auth.route'
 import userRouter from './src/modules/user/user.route'
 import productRoute from './src/modules/product/product.route'
-import saleRouter from './src/modules/sale/sale.router'
-
+import publicationRoute from './src/modules/publication/publication.route'
+import categoriaRouter from './src/modules/categoria/categoria.router'
+import statusproductRoute from './src/modules/product/statusproduct/statusproduct.route'
+import Config from './src/config/configuration'
+import {ENVV} from './src/types';
 import morgan from 'morgan'
 import cors from 'cors'
 
@@ -17,6 +20,9 @@ class Server {
     user: '/api/user',
     products: '/api/product',
     sale: '/api/sale',
+    publication: '/api/publication',
+    category: '/api/category',
+    statusproduct: '/api/statusproduct',
   }
   private port: number
   constructor (init: { port: number }) {
@@ -29,12 +35,15 @@ class Server {
   }
   private async config(){
     this.app.use(morgan('dev'))
-    this.app.use(cors())
+    this.app.use(cors({
+      origin:''
+    }))
     this.app.use(json())
     this.app.use(urlencoded())  
   }
   private async lauchDataBase ():Promise<boolean> {
     const connection = await createConnection()
+    this.connection = connection
     if (!connection.isConnected) {
       throw new Error('DataBase is disconected'.toUpperCase())
     } else {
@@ -49,10 +58,11 @@ class Server {
     this.app.use(this.endpoints.authentication, authRouter)
     this.app.use(this.endpoints.user, userRouter) 
     this.app.use(this.endpoints.products, productRoute) 
-    this.app.use(this.endpoints.sale, saleRouter) 
-    
-    
+    this.app.use(this.endpoints.publication, publicationRoute) 
+    this.app.use(this.endpoints.category, categoriaRouter) 
+    this.app.use(this.endpoints.statusproduct,statusproductRoute)
 
+    
   }
 
   public async lauchServer ():Promise<any>{
@@ -65,7 +75,8 @@ class Server {
   }
 }
 
-const port:number = parseInt(process.env.PORT || '3000') 
+const port:number = parseInt(Config.get(ENVV.PORT) || '3000') 
 
 const server = new Server({port})
+
 server.lauchServer()

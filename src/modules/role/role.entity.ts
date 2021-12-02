@@ -1,22 +1,25 @@
 
-import {BaseEntity, Column, Entity, OneToMany, PrimaryGeneratedColumn} from 'typeorm';
+import {BaseEntity, Column, Entity, Generated, OneToMany, PrimaryGeneratedColumn} from 'typeorm';
 import { User } from '../user/user.entity';
-import {typesUser} from '../../types'
+import {Roles} from '../../types'
 
 @Entity()
 export class Role  extends BaseEntity{
  @PrimaryGeneratedColumn()
  id:number;
+ @Column()
+ @Generated("uuid")
+ uuid: string;
 
  @Column({
   type: "enum",
-  enum: typesUser,
-  default:typesUser.user,
+  enum: Roles,
+  default:Roles.user,
   nullable:false,
  })
  name:string;
 
-  @OneToMany(() => User, user => user.role)
-  user: User[];
+@OneToMany(() => User, user => user.role)
+user: User[];
 
 }

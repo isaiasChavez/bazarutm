@@ -1,18 +1,15 @@
 import {ServiceReponse} from '../../types'
 import ErrorHelper from '../../helpers/error.helper';
 import {CreateProductDTO,UpdateProductDTO} from './product.dto';
-class ProductService {
+import { Service } from '../interfaces/service.interface';
+class ProductService extends Service {
   statusOk
-  private errorHelper: ErrorHelper
-
   constructor () {
+    super()
     this.statusOk = {
-        status: 400,
+        status: this.HTTPResponses.Ok,
         msg: 'ok'
-      }
-      this.errorHelper = new ErrorHelper(this)
-
-      
+      }      
   }
 
   createProduct = async (createProductDTO:CreateProductDTO):Promise<ServiceReponse> => {
@@ -20,65 +17,43 @@ class ProductService {
 
       
     } catch (error) {
-      return {
-        status: 500,
-        msg: this.errorHelper.genericHandler("createProduct",error)
-      }
-    }
-  }
-
-  deleteProduct  = async (productUuid:string): Promise<ServiceReponse>=> {
-    try {
-   
-    } catch (error) {
-      return {
-        status: 500,
-        msg: this.errorHelper.genericHandler("deleteProduct",error)
+     return {
+        status: this.HTTPResponses.InternalError,
+        msg: this.eH.genericHandler("createProduct",error)
       }
     }
   }
 
   updateProduct  = async(updateProductDTO:UpdateProductDTO): Promise<ServiceReponse>=> {
     try {
+
+
    
     } catch (error) {
       return {
-        status: 500,
-        msg: this.errorHelper.genericHandler("updateProduct",error)
-      }
-    }
-  }
-  getAllProducts =  async()=>  {
-   try {
-   
-    } catch (error) {
-      return {
-        status: 500,
-        msg: this.errorHelper.genericHandler("getAllProducts",error)
+        status: this.HTTPResponses.InternalError,
+        msg: this.eH.genericHandler("updateProduct",error)
       }
     }
   }
 
-  getProduct = async ()=> {
+  deleteAssetProduct  = async(uuidAsset:string): Promise<ServiceReponse>=> {
     try {
+
+      
+
    
     } catch (error) {
       return {
-        status: 500,
-        msg: this.errorHelper.genericHandler("getProduct",error)
+        status: this.HTTPResponses.InternalError,
+        msg: this.eH.genericHandler("updateProduct",error)
       }
     }
   }
-  getProductsUser  = async()=> {
-    try {
-      
-    } catch (error) {
-      return {
-        status: 500,
-        msg: this.errorHelper.genericHandler("getProductsUser",error)
-      }
-    }
-  }
+  
+
+  
+  
   
 }
 

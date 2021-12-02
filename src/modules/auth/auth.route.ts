@@ -1,19 +1,22 @@
-import express from 'express'
-import { check } from "express-validator"
-import authMid from '../../middleware/auth'
-const router = express.Router()
+import { Router } from 'express'
 import AuthController from './auth.controller'
+import {Middleware, RouterInterface} from '../../types'
+class AuthRoutes implements RouterInterface{
+  
+  router: Router
+  controller: AuthController
+  globalMidleware: Middleware[] = [];
+  
+  constructor () {
+    this.router = Router()
+    this.controller = new AuthController()
+    this.config()
+  }
+  private config (): void {
+    
+   this.router.post("/",this.globalMidleware,this.controller.logIn)
+   this.router.post("/logout",this.globalMidleware,this.controller.logOut)
 
-const authController = new AuthController()
-
-router.post("/",
-[check("email", "El email es obligatorio").not().isEmpty(),
-check("password", "El password es obligatorio").not().isEmpty()
-],
-
- authController.authenticateUser )
-
-
-router.get("/",authMid,authController.authenticatedUser)
-
-export default router
+  }
+}
+export default new AuthRoutes().router
