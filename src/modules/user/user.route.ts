@@ -5,7 +5,8 @@ import {RouterInterface,Middleware} from '../../types'
 class UserRoutes implements RouterInterface {
   public router: Router
   controller: UserController
-  globalMidleware:Middleware[]= [authMid]
+  //globalMidleware:Middleware[]= [authMid]
+  globalMidleware:Middleware[]= []
 
   constructor () {
     this.router = Router()
