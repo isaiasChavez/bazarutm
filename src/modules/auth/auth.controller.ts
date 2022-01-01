@@ -12,26 +12,54 @@ class AuthController extends Controller {
     this.authService = new AuthService()
   }
 
+  
+  public validateTokenSesion = async (req: Request, res: Response): Promise<void> => {
+
+    try {
+      
+      const {token} = req.params
+
+      const response = this.authService.validateTokenSesion(token)
+      console.log({response})
+
+      res.status(this.HTTPResponses.Ok).json(response)      
+      
+
+    } catch (error) {
+
+      res.status(this.HTTPResponses.InternalError).json({ msg: this.eH.genericHandler('validateTokenSesion', error) })
+
+    }
+
+
+  }
+
   public logIn = async (req: Request, res: Response): Promise<void> => {
     try {
+      
       let response: ServerResponse = {
         msg: '',
         status: 500,
         data: null
       }
-
+      
       const data = new LoginDTO(req.body)
-      await validateOrReject(data).catch(e => {
-        response.msg = this.eH.validationHandler('logIn', e)
-        res.status(response.status).json(response)
+
+      try {
+        await validateOrReject(data)
+
+      } catch (error) {
+        response.msg = this.eH.validationHandler('logIn', error)
+        res.status(this.HTTPResponses.BadRequest).json(response)
         return
-      })
+      }
 
       response = await this.authService.verifyUser(data)
+      console.log({response})
+      res.status(this.HTTPResponses.Ok).json(response)
 
-      res.status(response.status).json(response)
     } catch (error) {
-      res.status(500).json({ msg: this.eH.genericHandler('logIn', error) })
+      res.status(this.HTTPResponses.InternalError).json({ msg: this.eH.genericHandler('logIn', error) })
     }
   }
   public logOut = async (req: Request, res: Response) => {

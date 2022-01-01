@@ -1,7 +1,7 @@
 import { Request, Response } from 'express'
 import UserService from './user.service'
 import { ServerResponse } from '../../types'
-import { CreateUserDTO, GetUserProfileDTO, UpdateUserDTO } from './user.dto'
+import { CreateUserDTO, GetUserLoggedProfileDTO, GetUserProfileDTO, UpdateUserDTO } from './user.dto'
 import { validateOrReject } from 'class-validator'
 import { Controller } from '../interfaces/service.interface'
 
@@ -47,6 +47,35 @@ class UserController extends Controller {
       res.status(500).json({
         msg: 'Error!'
       })
+    }
+  }
+
+  public getUserLoggedProfile = async (
+    req: Request,
+    res: Response
+  ): Promise<void> => {
+    try {
+
+
+      let response: ServerResponse = this.firsValueRes
+      const uuid: string = req.body.uuidauth
+      console.log({uuid})
+      const getProfileDTO = new GetUserLoggedProfileDTO(uuid)
+
+      await validateOrReject(getProfileDTO)
+        .then(async () => {
+          response = await this.userService.getUserLoggedProfile(getProfileDTO)
+        })
+        .catch(e => {
+          console.log("ERROR")
+          console.log({e})
+          response.msg = this.eH.validationHandler('getUserLoggedProfile', e)
+        })
+      res.status(200).json(response)
+      return
+
+    } catch (e) {
+      res.status(500).json({ msg: this.eH.genericHandler('getUserLoggedProfile', e) })
     }
   }
   public getUserProfile = async (

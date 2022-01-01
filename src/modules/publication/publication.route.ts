@@ -6,7 +6,7 @@ class PublicationRoutes implements RouterInterface{
   public router: Router
   controller: PublicationController
   globalMidleware: any;
-
+  route: string="api/publication";
   constructor () {
     this.globalMidleware =[]
     this.router = Router()

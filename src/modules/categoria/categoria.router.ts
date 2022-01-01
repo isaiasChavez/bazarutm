@@ -6,6 +6,7 @@ class CategoryRoutes implements RouterInterface {
   router: Router
   controller: CategoriaController
   globalMidleware: Middleware[]
+  route: string="api/category"
 
   constructor () {
     this.globalMidleware=[]

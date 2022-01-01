@@ -1,14 +1,17 @@
+import { Category } from './../categoria/categoria.entity';
 import { CreatePublicationDTO } from './publication.dto'
-import { ServiceReponse, ServerResponse } from '../../types'
+import { ServiceReponse, ServerResponse, StatusProductEnum } from '../../types'
 import { Publication } from './publication.entity'
 import AssetService from '../asset/asset.service'
 import { Asset } from '../asset/asset.entity'
 import { Service } from '../interfaces/service.interface'
 import { Producto } from '../product/product.entity'
+import { StatusProduct } from '../product/statusproduct/statusproduct.entity'
 
 class PublicationService extends Service{
   private statusOk
   private assetService: AssetService = new AssetService()
+
   constructor () {
     super()
     this.statusOk = {
@@ -17,12 +20,40 @@ class PublicationService extends Service{
     }
   }
 
-  async create (createDTO: CreatePublicationDTO): Promise<ServiceReponse> {
+  async create (dto: CreatePublicationDTO): Promise<ServiceReponse> {
     try {
 
-      const publication = Publication.create(createDTO)
 
-      Publication.save(publication)
+      const statusProduct:StatusProduct = await StatusProduct.findOne({
+        where:{
+          name:dto.statusProduct
+        }
+      })
+      
+      const category:Category = await Category.findOne({
+        where:{
+          name:dto.category
+        }
+      }) 
+      
+      
+      const producto:Producto = Producto.create({
+        statusProduct,
+      })
+      await Producto.save(producto)
+
+      const publication = Publication.create({
+        category,
+        coverPage:"",
+        description:dto.description,
+        title:dto.title,
+        price:dto.price,
+        producto
+      })
+      
+      await Publication.save(publication)
+      
+
       return {
         msg:'ok',
         status:this.HTTPResponses.OkCreated

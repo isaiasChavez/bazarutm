@@ -1,4 +1,4 @@
-import { IsAlphanumeric, IsBoolean, IsDate, IsDateString, IsEmail, IsNotEmpty, IsNumberString, IsRFC3339, IsString, Max, MaxLength, Min, MinLength } from 'class-validator';
+import { IsAlphanumeric, IsBoolean, IsDate, IsDateString, IsEmail, IsNotEmpty, IsNumberString, IsRFC3339, IsString, Max, MaxLength, Min, MinLength, IsUUID } from 'class-validator';
 import { SecureRequest } from '../interfaces/securerequest.class';
 export class GetUserProfileDTO{
   constructor (email:string) {
@@ -8,11 +8,29 @@ export class GetUserProfileDTO{
   @IsNotEmpty()
   email: string
 }
+export type Profile = {
+  birthday: string;
+  gender: boolean;
+  instagram: string;
+  lastname: string;
+  name: string;
+  email: string;
+  phonenumber: number;
+  telegram:string,
+};
+export class GetUserLoggedProfileDTO{
+  constructor (UUID:string) {
+    this.UUID = UUID
+  }
+  @IsUUID()
+  @IsNotEmpty()
+  UUID: string
+}
 
 
-export class UpdateUserDTO extends SecureRequest{
+
+export class UpdateUserDTO {
   constructor ({name,lastname,email,birthday,phonenumber,gender,password,uuidauth,role}) {
-    super({uuidauth,role})
     this.name = name
     this.lastname = lastname
     this.birthday = birthday

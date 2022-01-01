@@ -15,9 +15,11 @@ export enum Roles {
 export type Middleware = (req:Request,res:Response,next:NextFunction)=> void
 
 export enum StatusProductEnum {
-  USADO = 'USADO',
   NUEVO = 'NUEVO',
-  ENPAQUETADO = 'ENPAQUETADO'
+  USADO = 'USADO - COMO NUEVO',
+  BUEN_ESTADO = 'USADO - BUEN ESTADO',
+  SI_QUIERES = 'USADO - LE NETA SI QUIERES LLEVATELO',
+  ENPAQUETADO = 'ENPAQUETADO',
 }
 
 export enum HTTPResponses {
@@ -32,12 +34,16 @@ export enum HTTPResponses {
 }
 
 export enum CategoriesEnum {
-  Clothes = 'Clothes',
-  Others = 'Others'
+  ELECTRONICA = 'ELECTRONICA',
+  HOGAR = 'HOGAR',
+  LABORATORIOTALLER = 'LABORATORIO Y TALLER',
+  ROPA = 'ROPA',
+  OTROS = 'OTROS'
 }
 
 export interface RouterInterface  {
   router: Router
+  route: string
   controller: Controller  
   globalMidleware:Middleware[] 
 }
@@ -46,12 +52,12 @@ export interface ServiceReponse {
   status: number
   msg: string
 }
+export interface ServerResponse extends ServiceReponse {
+  data?: any
+}
 
 export enum ENVV {
   PORT = 'PORT',
   SECRET = 'SECRET'
 }
 
-export interface ServerResponse extends ServiceReponse {
-  data?: any
-}

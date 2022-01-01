@@ -27,6 +27,12 @@ export class Publication extends BaseEntity {
   title: string
 
   @Column({
+    type: 'number',
+    nullable: false,
+  })
+  price: number
+
+  @Column({
     type: 'varchar',
     nullable: false,
     length: 150

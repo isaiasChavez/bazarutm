@@ -6,7 +6,7 @@ class ProductRoutes implements RouterInterface{
   public router: Router
   controller: ProductController
   globalMidleware: Middleware[]
-
+  route:string ='/api/product'
   constructor () {
     this.globalMidleware=[]
     this.router = Router()

@@ -18,6 +18,7 @@ class CategoriaController extends Controller {
   }
 
   public getAll = async (req: Request, res: Response): Promise<void> => {
+    console.log("GET ALL")
     try {
       let response: ServerResponse = this.firsValueRes
       response = await this.categoriaService.getAll()

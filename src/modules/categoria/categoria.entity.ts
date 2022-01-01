@@ -17,7 +17,7 @@ export class Category extends BaseEntity {
   @Column({
     type: 'enum',
     enum: CategoriesEnum,
-    default: CategoriesEnum.Others,
+    default: CategoriesEnum.OTROS,
     nullable: false
   })
   name: string

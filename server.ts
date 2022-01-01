@@ -35,9 +35,7 @@ class Server {
   }
   private async config(){
     this.app.use(morgan('dev'))
-    this.app.use(cors({
-      origin:''
-    }))
+    this.app.use(cors())
     this.app.use(json())
     this.app.use(urlencoded())  
   }

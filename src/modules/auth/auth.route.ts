@@ -6,6 +6,7 @@ class AuthRoutes implements RouterInterface{
   router: Router
   controller: AuthController
   globalMidleware: Middleware[] = [];
+  route:'/api/auth'
   
   constructor () {
     this.router = Router()
@@ -16,6 +17,8 @@ class AuthRoutes implements RouterInterface{
     
    this.router.post("/",this.globalMidleware,this.controller.logIn)
    this.router.post("/logout",this.globalMidleware,this.controller.logOut)
+   this.router.post("/validate/:token",this.globalMidleware,this.controller.validateTokenSesion)
+   
 
   }
 }

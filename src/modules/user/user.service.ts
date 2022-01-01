@@ -1,5 +1,5 @@
 import { User } from './user.entity'
-import { CreateUserDTO, GetUserProfileDTO, UpdateUserDTO } from './user.dto'
+import { CreateUserDTO, GetUserLoggedProfileDTO, GetUserProfileDTO, UpdateUserDTO } from './user.dto'
 import { Profile } from '../profile/profile.entity'
 import bcrypt from 'bcryptjs'
 import { Role } from '../role/role.entity'
@@ -24,6 +24,7 @@ class UserService extends Service {
       const { exist } = await this.getUser({
         email:createUserDTO.email
       })
+
       if (exist) {
         return {
           msg: 'This email is taked',
@@ -31,7 +32,7 @@ class UserService extends Service {
         }
       }
       const profile: Profile = Profile.create({
-        birthday: createUserDTO.birthday,
+        birthday: new Date(),
         gender: createUserDTO.gender,
         lastname: createUserDTO.lastname,
         name: createUserDTO.name,
@@ -105,6 +106,38 @@ class UserService extends Service {
     }
   }
 
+  public async getUserLoggedProfile (
+    getProfileDTO: GetUserLoggedProfileDTO
+  ): Promise<ServerResponse> {
+    
+    const { exist, profile,user } = await this.getUser({
+      uuid:getProfileDTO.UUID,
+      getProfile:true
+    })
+
+    if (!exist) {
+      return {
+        status: this.HTTPResponses.BadRequest,
+        msg: 'user not found'
+      }
+    }
+    console.log({user,profile})
+    const { CREATED_AT, id:id_, ...restprofile } = profile
+
+    const {  id,password,uuid,profile:_, ...resuser } = user
+
+
+    let data = {...resuser } as any
+    data = {...data,...restprofile} 
+
+    console.log({data})
+
+    return {
+      ...this.statusOk,
+      data
+    }
+  }
+
   public async getUserProfile (
     getProfileDTO: GetUserProfileDTO
   ): Promise<ServerResponse> {
@@ -144,12 +177,13 @@ class UserService extends Service {
         where: { uuid:data.uuid },
         relations: data.getProfile ? ['profile'] : []
       })
+      console.log({user})
     }
     if (!user) {
       return { exist: false }
     }
 
-    return { exist: true, user }
+    return { exist: true, user,profile:user.profile }
   }
 
   public async delete (userEmail: string): Promise<ServiceReponse> {

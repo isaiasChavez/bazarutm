@@ -1,4 +1,5 @@
 import {
+  BaseEntity,
   Column,
   Entity,
   ManyToOne,
@@ -12,7 +13,7 @@ import { Publication } from '../publication/publication.entity'
 import { StatusProduct } from './statusproduct/statusproduct.entity'
 
 @Entity()
-export class Producto {
+export class Producto extends BaseEntity{
   @PrimaryGeneratedColumn()
   id: number
 

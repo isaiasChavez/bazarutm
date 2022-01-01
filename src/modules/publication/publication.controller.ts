@@ -49,7 +49,9 @@ class PublicationController extends Controller {
   public create = async (req: Request, res: Response): Promise<void> => {
     try {
       let response: ServerResponse = this.firsValueRes
+      
       const data = new CreatePublicationDTO(req.body)
+
       await validateOrReject(data)
         .then(async () => {
           response = await this.publicationService.create(data)
