@@ -5,6 +5,7 @@ import {
   Generated,
   JoinColumn,
   ManyToOne,
+  OneToMany,
   OneToOne,
   PrimaryGeneratedColumn
 } from 'typeorm'
@@ -12,6 +13,7 @@ import { Role } from '../role/role.entity'
 import { CreateUserDTO } from './user.dto'
 import { typesUser } from '../../types'
 import { Profile } from '../profile/profile.entity'
+import { Publication } from '../publication/publication.entity'
 
 @Entity()
 export class User extends BaseEntity  {
@@ -54,5 +56,8 @@ export class User extends BaseEntity  {
    @OneToOne(() => Profile)
     @JoinColumn()
     profile: Profile;
+  
+    @OneToMany(() => Publication, publication => publication.user)
+    publication: Publication[];
 
 }

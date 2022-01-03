@@ -43,6 +43,8 @@ const authMid:Middleware = (req: Request, res: Response, next: NextFunction) => 
         .json({ msg: 'Invalid token some fields are invalid' })
     }
     req.body.uuidauth = secureRequest.uuidauth
+    req.body.role = secureRequest.role
+
     
     next()
   } catch (error) {

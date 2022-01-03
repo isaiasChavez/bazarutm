@@ -12,4 +12,5 @@ export class SecureRequest {
   @IsNotEmpty()
   role: string
 
+  
 }

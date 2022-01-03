@@ -10,6 +10,7 @@ import {
 } from 'typeorm'
 import { Category } from '../categoria/categoria.entity'
 import { Producto } from '../product/product.entity'
+import { User } from '../user/user.entity'
 
 @Entity()
 export class Publication extends BaseEntity {
@@ -27,7 +28,7 @@ export class Publication extends BaseEntity {
   title: string
 
   @Column({
-    type: 'number',
+    type: 'decimal',
     nullable: false,
   })
   price: number
@@ -52,6 +53,12 @@ export class Publication extends BaseEntity {
   )
   category: Category
 
+  @ManyToOne(
+    () => User,
+    user => user.publication,
+  )
+  user: User
+
   @Column({
     type: 'varchar',
     nullable: false
@@ -61,5 +68,7 @@ export class Publication extends BaseEntity {
    @OneToOne(() => Producto)
     @JoinColumn()
     producto: Producto;
+
+  
 
 }

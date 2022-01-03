@@ -27,20 +27,30 @@ class PublicationController extends Controller {
 
   public getOne = async (req: Request, res: Response): Promise<void> => {
     try {
-      res.json({
-        msg: 'Si',
-        token: '1'
-      })
+      console.log("ONEEEEE")
+      let response: ServerResponse = this.firsValueRes
+
+      response = await this.publicationService.getOne(req.params.uuid)
+
+      res.status(200).json(response)
+
     } catch (e) {
       res.status(500).json({ msg: this.eH.genericHandler('getOne', e) })
     }
   }
+
+  
   public getAllOfUser = async (req: Request, res: Response): Promise<void> => {
     try {
-      res.json({
-        msg: 'Si',
-        token: '1'
-      })
+      console.log("Trayendo todo del usuario")
+      let response: ServerResponse = this.firsValueRes
+
+      response = await this.publicationService.getAllOfUser(req)
+   
+    
+      res.status(response.status).json(response)
+      
+
     } catch (e) {
       res.status(500).json({ msg: this.eH.genericHandler('getAllOfUser', e) })
     }
@@ -48,20 +58,24 @@ class PublicationController extends Controller {
 
   public create = async (req: Request, res: Response): Promise<void> => {
     try {
+      console.log(req.body)
+
       let response: ServerResponse = this.firsValueRes
       
       const data = new CreatePublicationDTO(req.body)
 
       await validateOrReject(data)
-        .then(async () => {
-          response = await this.publicationService.create(data)
+      .then(async () => {
+        response = await this.publicationService.create(data)
+      })
+      .catch(e => {
+        response.msg = this.eH.validationHandler('create', e)
         })
-        .catch(e => {
-          response.msg = this.eH.validationHandler('create', e)
-        })
-      res.status(response.status).json(response)
-    } catch (e) {
-      res.status(500).json({ msg: this.eH.genericHandler('addProduct', e) })
+        
+        res.status(200).json(response)
+
+      } catch (e) {
+      res.status(500).json({ msg: this.eH.genericHandler('create', e) })
     }
   }
 
