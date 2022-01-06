@@ -1,4 +1,5 @@
 import { IsEnum, IsNotEmpty, IsNumber, IsString, IsUUID } from 'class-validator'
+import { CategoriesEnum } from '../../types'
 import { Category } from '../categoria/categoria.entity'
 import { SecureRequest } from '../interfaces/securerequest.class'
 import { StatusProduct } from '../product/statusproduct/statusproduct.entity'
@@ -66,3 +67,13 @@ export class UpdatePublicationDTO extends CreatePublicationDTO{
 
 }
 
+
+export class GetRelated{
+
+  constructor (category:string) {
+    this.category = category as any
+  }
+
+  @IsEnum(CategoriesEnum)
+  category: CategoriesEnum;
+}

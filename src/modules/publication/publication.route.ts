@@ -23,6 +23,8 @@ class PublicationRoutes implements RouterInterface{
     this.router.put('/',this.globalMidleware,getUserMid,this.controller.update)
     this.router.get('/user',this.globalMidleware,getUserMid,this.controller.getAllOfUser)
     this.router.get('/:uuid',this.controller.getOne)
+    this.router.get('/related/:category',this.controller.getRelated)
+    
     
   }
 }

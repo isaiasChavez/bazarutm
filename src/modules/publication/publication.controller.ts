@@ -1,7 +1,7 @@
 import { Request, Response } from 'express'
 import PublicationService from './publication.service'
 import { ServerResponse } from '../../types'
-import { CreatePublicationDTO, UpdatePublicationDTO } from './publication.dto'
+import { CreatePublicationDTO, GetRelated, UpdatePublicationDTO } from './publication.dto'
 import { validateOrReject } from 'class-validator'
 import { Controller } from '../interfaces/service.interface'
 
@@ -44,6 +44,24 @@ class PublicationController extends Controller {
     }
   }
 
+  public getRelated = async (req: Request, res: Response): Promise<void> => {
+    try {
+      
+
+      let response: ServerResponse = this.firsValueRes
+
+      const dto = new GetRelated(req.params.category)
+      validateOrReject(dto)
+      response = await this.publicationService.getRelated(dto.category)
+      
+
+      res.status(200).json(response)
+
+    } catch (e) {
+      res.status(500).json({ msg: this.eH.genericHandler('getOne', e) })
+    }
+  }
+  
   
   public getAllOfUser = async (req: Request, res: Response): Promise<void> => {
     try {

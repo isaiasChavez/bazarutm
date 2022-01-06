@@ -1,6 +1,6 @@
 import { Category } from './../categoria/categoria.entity'
 import { CreatePublicationDTO, UpdatePublicationDTO } from './publication.dto'
-import { ServiceReponse, ServerResponse, StatusProductEnum } from '../../types'
+import { ServiceReponse, ServerResponse, StatusProductEnum, CategoriesEnum } from '../../types'
 import { Publication } from './publication.entity'
 import AssetService from '../asset/asset.service'
 import { Asset } from '../asset/asset.entity'
@@ -259,6 +259,45 @@ class PublicationService extends Service {
       }
     }
   }
+
+
+  async getRelated(category: CategoriesEnum): Promise<ServerResponse> {
+
+    try {
+
+      const publications: Publication[] = await Publication.find({
+        where: {
+          isActive: true,
+          category:category
+        },
+        relations: ['category'],
+        select: ['title', 'coverPage', 'description', 'isActive',"uuid"],
+        take:3
+      })
+      
+
+      if (publications.length === 0) {
+        console.log("No hay contenido")
+        return {
+          msg: 'There is not values',
+          status: this.HTTPResponses.OkNoContent,
+        }
+      }
+
+      return {
+        msg:"ok",
+        status: this.HTTPResponses.Ok,
+        data:publications
+        
+      }
+    } catch (error) {
+      return {
+        status: this.HTTPResponses.InternalError,
+        msg: this.eH.genericHandler('getAll', error),
+      }
+    }
+  }
+
 
   async getAllOfUser(req: Request): Promise<ServerResponse> {
     try {
