@@ -11,10 +11,8 @@ const getUserMid:Middleware = async (req: Request, res: Response, next: NextFunc
         }
     })
 
-    console.log({user})
    
     req.body.user = user
-    console.log("REQ.BODY MID,",req.body)
     next()
   } catch (error) {
     console.log('error en el middleware de obtener usuario')

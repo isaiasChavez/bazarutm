@@ -17,8 +17,12 @@ class PublicationRoutes implements RouterInterface{
   }
   private config (): void {
     this.router.post('/',this.globalMidleware,getUserMid,this.controller.create)
+    this.router.get('/all',this.controller.getAll)
+
+    this.router.delete('/:uuid',this.globalMidleware,getUserMid,this.controller.deletePublication)
+    this.router.put('/',this.globalMidleware,getUserMid,this.controller.update)
     this.router.get('/user',this.globalMidleware,getUserMid,this.controller.getAllOfUser)
-    this.router.get('/one/:uuid',this.controller.getOne)
+    this.router.get('/:uuid',this.controller.getOne)
     
   }
 }

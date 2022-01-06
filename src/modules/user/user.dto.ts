@@ -51,8 +51,6 @@ export class UpdateUserDTO {
   @MaxLength(200)
   lastname: string
   @IsNotEmpty()
-  @IsNumberString()
-  @MaxLength(200)
   phonenumber:string
   birthday:Date
   @IsNotEmpty()

@@ -8,7 +8,6 @@ import { HTTPResponses,Middleware } from '../types'
 
 const authMid:Middleware = (req: Request, res: Response, next: NextFunction) => {
   try {
-    console.log("PETICIÓN")
     let secureRequest: SecureRequest
     const payload = req.header('Authorization')
     if (!payload) {
@@ -27,7 +26,6 @@ const authMid:Middleware = (req: Request, res: Response, next: NextFunction) => 
       }
       secureRequest = new SecureRequest(data)
 
-      console.log({ secureRequest, cifrado })
     } catch (error) {
       return res
         .status(HTTPResponses.Unauthorized)
@@ -35,7 +33,6 @@ const authMid:Middleware = (req: Request, res: Response, next: NextFunction) => 
     }
     try {
       validateOrReject(secureRequest)
-      console.log('Si lo validó correctamente')
     } catch (error) {
       console.log({error})
       return res

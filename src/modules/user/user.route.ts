@@ -14,7 +14,7 @@ class UserRoutes implements RouterInterface {
     
   }
   private config = (): void => {
-    this.router.post('/',this.globalMidleware, this.controller.createUser)
+    this.router.post('/', this.controller.createUser)
     this.router.get('/',this.globalMidleware, this.controller.getUserLoggedProfile)
     this.router.put('/:email',this.globalMidleware, this.controller.updateUser)
     this.router.delete('/:email',this.globalMidleware, this.controller.deleteUser)
