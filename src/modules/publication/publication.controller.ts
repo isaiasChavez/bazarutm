@@ -1,3 +1,4 @@
+import { Category } from './../categoria/categoria.entity';
 import { Request, Response } from 'express'
 import PublicationService from './publication.service'
 import { ServerResponse } from '../../types'
@@ -17,9 +18,13 @@ class PublicationController extends Controller {
     try {
       
       let response: ServerResponse = this.firsValueRes
+
+      const category = req.query.category
       
-      response = await this.publicationService.getAll()
-      console.log("Solicitando todos los recursos",{response})
+      const realCategory:string = category ? category as string:'all' 
+      console.log({realCategory});
+      response = await this.publicationService.getAll(realCategory)
+      console.log("Solicitando todos los recursos")
 
       res.status(200).json(response)
 

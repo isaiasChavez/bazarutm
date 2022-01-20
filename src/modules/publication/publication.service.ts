@@ -228,18 +228,32 @@ class PublicationService extends Service {
     }
   }
 
-  async getAll(): Promise<ServerResponse> {
+  async getAll(category:string): Promise<ServerResponse> {
     try {
-      const publications: Publication[] = await Publication.find({
-        where: {
-          isActive: true,
-        },
-        relations: ['category'],
-        select: ['title', 'coverPage', 'description', 'isActive',"uuid"],
-      })
-
+      let publications : Publication[]
+      console.log({category});
+      if (category==="ALL") {
+        publications = await Publication.find({
+          where: {
+            isActive: true,
+          },
+          relations: ['category'],
+          select: ['title',  'description', 'isActive',"uuid"],
+        })
+        
+      }else{
+        publications = await Publication.find({
+          where: {
+            isActive: true,
+            category:{
+              name:category
+            }
+          },
+          relations: ['category'],
+          select: ['title',  'description', 'isActive',"uuid"],
+        })
+      }
       if (publications.length === 0) {
-        console.log("No hay contenido")
         return {
           msg: 'There is not values',
           status: this.HTTPResponses.OkNoContent,
@@ -262,16 +276,20 @@ class PublicationService extends Service {
 
 
   async getRelated(category: CategoriesEnum): Promise<ServerResponse> {
-
     try {
+
+      
+      const categorySearch:Category = await Category.findOne({
+        where:{
+          name:category
+        }
+      })
 
       const publications: Publication[] = await Publication.find({
         where: {
           isActive: true,
-          category:category
+          category:categorySearch
         },
-        relations: ['category'],
-        select: ['title', 'coverPage', 'description', 'isActive',"uuid"],
         take:3
       })
       
@@ -291,6 +309,7 @@ class PublicationService extends Service {
         
       }
     } catch (error) {
+      console.log({error})
       return {
         status: this.HTTPResponses.InternalError,
         msg: this.eH.genericHandler('getAll', error),
