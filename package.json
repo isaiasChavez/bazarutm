@@ -1,22 +1,17 @@
 {
-  "name": "scaperoom",
+  "name": "bazarutm",
   "version": "1.0.0",
-  "description": "Proyecto de scaperoom ",
+  "description": "Proyecto de bazarutm ",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node dist/server.js",
+    "start:prod": "node dist/server.js",
     "start:dev": "./node_modules/.bin/tsc-watch --onSuccess \"node ./dist/server.js\"",
     "migration:generate": "ts-node node_modules/typeorm/cli.js migration:generate --config ./ormconfig.js --name",
     "migration:run": "ts-node node_modules/typeorm/cli.js migration:run --config ./ormconfig.js"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://isaiaschavez@bitbucket.org/isaiaschavez/scaperooms.git"
-  },
-  "author": "Inmersys",
+  "author": "Isaías Chávez",
   "license": "ISC",
-  "homepage": "https://bitbucket.org/isaiaschavez/scaperooms#readme",
   "dependencies": {
     "bcryptjs": "^2.4.3",
     "class-validator": "^0.13.2",

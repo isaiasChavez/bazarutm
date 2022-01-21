@@ -6,10 +6,10 @@ module.exports = {
   password: 'wAMVrsYA0Xlpzkum',
   
   database: 'defaultdb',
-  entities: ['./dist/src/modules/**/*.entity.js'],
+  entities: ['dist/src/modules/**/*{.entity.ts,.entity.js}'],
   migrationTableName: 'migrations',
   migrations: [
-      "src/migration/**/*.ts"
+      "dist/database/migrations/*{.ts,.js}"
    ],  //
    ssl: true,
   extra: {
