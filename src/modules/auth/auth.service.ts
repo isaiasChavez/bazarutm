@@ -24,7 +24,7 @@ class AuthService extends Service {
       role: user.role.uuid,
       uuidauth: user.uuid,
     };
-    const jwtToken = jwt.sign(dataToSign, Config.get(ENVV.SECRET), {
+    const jwtToken = jwt.sign(dataToSign, process.env.SECRET, {
       expiresIn: Config.timeExpireSesions,
     });
     return jwtToken;
@@ -34,7 +34,7 @@ class AuthService extends Service {
 
     try {
       
-      const cifrado:JwtPayload =  jwt.verify(token, Config.get(ENVV.SECRET)) as JwtPayload;
+      const cifrado:JwtPayload =  jwt.verify(token, process.env.SECRET) as JwtPayload;
       return {
         msg: "ok",
         status: this.HTTPResponses.Ok,

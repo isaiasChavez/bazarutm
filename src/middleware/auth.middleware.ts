@@ -19,7 +19,7 @@ const authMid:Middleware = (req: Request, res: Response, next: NextFunction) => 
     const token = payload.replace('Bearer ', '').replace('bearer ', '')
 
     try {
-      const cifrado = JWT.verify(token, config.get(ENVV.SECRET)) as JwtPayload
+      const cifrado = JWT.verify(token, process.env.SECRET) as JwtPayload
       const data: SecureRequest= {
         uuidauth: cifrado.uuidauth,
         role:cifrado.role

@@ -15,6 +15,7 @@ class Config {
       throw new Error('.env file does not exist, please create one')
     }
     this.environment = dotenv.config().parsed
+    
     if (this.environment.ENVIROMENT === 'production') {
       this.configProduction()
     } else {
