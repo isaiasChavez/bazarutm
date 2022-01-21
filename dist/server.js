@@ -41,7 +41,6 @@ const categoria_router_1 = __importDefault(require("./src/modules/categoria/cate
 const statusproduct_route_1 = __importDefault(require("./src/modules/product/statusproduct/statusproduct.route"));
 const configuration_1 = __importDefault(require("./src/config/configuration"));
 const types_1 = require("./src/types");
-const morgan_1 = __importDefault(require("morgan"));
 const cors_1 = __importDefault(require("cors"));
 class Server {
     constructor(init) {
@@ -65,7 +64,6 @@ class Server {
     }
     config() {
         return __awaiter(this, void 0, void 0, function* () {
-            this.app.use((0, morgan_1.default)('dev'));
             this.app.use((0, cors_1.default)());
             this.app.use((0, express_1.json)());
             this.app.use((0, express_1.urlencoded)());

@@ -8,7 +8,6 @@ import categoriaRouter from './src/modules/categoria/categoria.router'
 import statusproductRoute from './src/modules/product/statusproduct/statusproduct.route'
 import Config from './src/config/configuration'
 import {ENVV} from './src/types';
-import morgan from 'morgan'
 import cors from 'cors'
 
 class Server {
@@ -34,7 +33,6 @@ class Server {
     }
   }
   private async config(){
-    this.app.use(morgan('dev'))
     this.app.use(cors())
     this.app.use(json())
     this.app.use(urlencoded())  
