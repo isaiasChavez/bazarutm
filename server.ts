@@ -66,12 +66,12 @@ class Server {
     await this.lauchDataBase()
     this.lauchRoutes()
     this.app.listen(this.port, () => {
-      return console.log(`Server is listening on ${this.port}`.toUpperCase())
+      return console.log(`Server is listening on ${process.env.PORT}`.toUpperCase())
     })
   }
 }
 
-const port:number = parseInt(Config.get(ENVV.PORT) || '3000') 
+const port:number = parseInt(process.env.PORT || '3000') 
 
 const server = new Server({port})
 
