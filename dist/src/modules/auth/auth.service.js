@@ -12,7 +12,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const types_1 = require("../../types");
 const user_entity_1 = require("../user/user.entity");
 const bcryptjs_1 = __importDefault(require("bcryptjs"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
@@ -26,14 +25,14 @@ class AuthService extends service_interface_1.Service {
                 role: user.role.uuid,
                 uuidauth: user.uuid,
             };
-            const jwtToken = jsonwebtoken_1.default.sign(dataToSign, configuration_1.default.get(types_1.ENVV.SECRET), {
+            const jwtToken = jsonwebtoken_1.default.sign(dataToSign, process.env.SECRET, {
                 expiresIn: configuration_1.default.timeExpireSesions,
             });
             return jwtToken;
         };
         this.validateTokenSesion = (token) => {
             try {
-                const cifrado = jsonwebtoken_1.default.verify(token, configuration_1.default.get(types_1.ENVV.SECRET));
+                const cifrado = jsonwebtoken_1.default.verify(token, process.env.SECRET);
                 return {
                     msg: "ok",
                     status: this.HTTPResponses.Ok,

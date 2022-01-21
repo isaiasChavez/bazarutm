@@ -39,8 +39,6 @@ const product_route_1 = __importDefault(require("./src/modules/product/product.r
 const publication_route_1 = __importDefault(require("./src/modules/publication/publication.route"));
 const categoria_router_1 = __importDefault(require("./src/modules/categoria/categoria.router"));
 const statusproduct_route_1 = __importDefault(require("./src/modules/product/statusproduct/statusproduct.route"));
-const configuration_1 = __importDefault(require("./src/config/configuration"));
-const types_1 = require("./src/types");
 const cors_1 = __importDefault(require("cors"));
 class Server {
     constructor(init) {
@@ -98,12 +96,12 @@ class Server {
             yield this.lauchDataBase();
             this.lauchRoutes();
             this.app.listen(this.port, () => {
-                return console.log(`Server is listening on ${this.port}`.toUpperCase());
+                return console.log(`Server is listening on ${process.env.PORT}`.toUpperCase());
             });
         });
     }
 }
-const port = parseInt(configuration_1.default.get(types_1.ENVV.PORT) || '3000');
+const port = parseInt(process.env.PORT || '3000');
 const server = new Server({ port });
 server.lauchServer();
 //# sourceMappingURL=server.js.map
