@@ -48,6 +48,10 @@ class AssetService {
     }
   }
 
+  uploadFile(){
+
+  }
+
     
 }
 

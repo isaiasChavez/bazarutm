@@ -58,6 +58,10 @@ export interface ServerResponse extends ServiceReponse {
 
 export enum ENVV {
   PORT = 'PORT',
-  SECRET = 'SECRET'
+  SECRET = 'SECRET',
+  BUCKET_NAME= "BUCKET_NAME",
+  AWS_ACCESS_KEY_ID="AWS_ACCESS_KEY_ID",
+  AWA_SECRET_ACCESS_KEY="AWA_SECRET_ACCESS_KEY",
+  S3_ENDPOINT="S3_ENDPOINT"
 }
 

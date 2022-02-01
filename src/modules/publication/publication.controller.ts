@@ -20,10 +20,12 @@ class PublicationController extends Controller {
       let response: ServerResponse = this.firsValueRes
 
       const category = req.query.category
+      const query = req.query.query
       
       const realCategory:string = category ? category as string:'all' 
-      console.log({realCategory});
-      response = await this.publicationService.getAll(realCategory)
+      const realQuery:string = query ? query as string:'' 
+      
+      response = await this.publicationService.getAll(realCategory,realQuery)
       console.log("Solicitando todos los recursos")
 
       res.status(200).json(response)

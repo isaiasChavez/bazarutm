@@ -29,6 +29,27 @@ export class GetUserLoggedProfileDTO{
 
 
 
+export class UpdateUserProfileDTO {
+  constructor ({telegram,instagram,phonenumber,uuidauth,role}) {
+    this.phonenumber = phonenumber
+    this.telegram =  telegram 
+    this.instagram = instagram
+  }
+
+  @IsNotEmpty()
+  phonenumber:string
+
+  @IsNotEmpty()
+  telegram:string
+
+  @IsNotEmpty()
+  instagram:string
+
+  
+}
+
+
+
 export class UpdateUserDTO {
   constructor ({name,lastname,email,birthday,phonenumber,gender,password,uuidauth,role}) {
     this.name = name

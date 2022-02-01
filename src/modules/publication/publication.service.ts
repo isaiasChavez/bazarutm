@@ -10,6 +10,7 @@ import { StatusProduct } from '../product/statusproduct/statusproduct.entity'
 import UserService from '../user/user.service'
 import { User } from '../user/user.entity'
 import { Request } from 'express'
+import { Like } from 'typeorm'
 
 class PublicationService extends Service {
   private statusOk
@@ -228,14 +229,18 @@ class PublicationService extends Service {
     }
   }
 
-  async getAll(category:string): Promise<ServerResponse> {
+  async getAll(category:string,query:string): Promise<ServerResponse> {
     try {
+
       let publications : Publication[]
-      console.log({category});
+      console.log({query});
+
       if (category==="ALL") {
         publications = await Publication.find({
           where: {
             isActive: true,
+            title: Like(`%${query}%`),
+
           },
           relations: ['category'],
           select: ['title',  'description', 'isActive',"uuid"],
