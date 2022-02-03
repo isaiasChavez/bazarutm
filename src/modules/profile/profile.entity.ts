@@ -21,6 +21,13 @@ export class Profile extends BaseEntity  {
   @Column({
     type: 'varchar',
     nullable: false,
+    default:"https://gw.alipayobjects.com/zos/antfincdn/LlvErxo8H9/photo-1503185912284-5271ff81b9a8.webp"
+  })
+  avatar: string
+
+  @Column({
+    type: 'varchar',
+    nullable: false,
     length: 100
   })
   lastname: string

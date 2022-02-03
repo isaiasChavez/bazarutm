@@ -20,7 +20,6 @@ class AuthController extends Controller {
       const {token} = req.params
 
       const response = this.authService.validateTokenSesion(token)
-      console.log({response})
 
       res.status(this.HTTPResponses.Ok).json(response)      
       
@@ -55,7 +54,6 @@ class AuthController extends Controller {
       }
 
       response = await this.authService.verifyUser(data)
-      console.log({response})
       res.status(this.HTTPResponses.Ok).json(response)
 
     } catch (error) {

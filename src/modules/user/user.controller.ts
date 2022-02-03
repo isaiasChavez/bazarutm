@@ -36,10 +36,8 @@ class UserController extends Controller {
 
       let response: ServerResponse = this.firsValueRes
       const data = new UpdateUserProfileDTO(req.body)
-
       await validateOrReject(data)
         .then(async () => {
-          console.log("OK")
           response = await this.userService.update(data,req)
         })
         .catch(e => {
@@ -61,7 +59,6 @@ class UserController extends Controller {
       const data = new UpdateUserDTO(req.body)
       await validateOrReject(data)
         .then(async () => {
-          console.log("OK")
           // response = await this.userService.update(data)
         })
         .catch(e => {
@@ -85,7 +82,6 @@ class UserController extends Controller {
 
       let response: ServerResponse = this.firsValueRes
       const uuid: string = req.body.uuidauth
-      console.log({uuid})
       const getProfileDTO = new GetUserLoggedProfileDTO(uuid)
 
       await validateOrReject(getProfileDTO)
@@ -93,8 +89,6 @@ class UserController extends Controller {
           response = await this.userService.getUserLoggedProfile(getProfileDTO)
         })
         .catch(e => {
-          console.log("ERROR")
-          console.log({e})
           response.msg = this.eH.validationHandler('getUserLoggedProfile', e)
         })
       res.status(200).json(response)

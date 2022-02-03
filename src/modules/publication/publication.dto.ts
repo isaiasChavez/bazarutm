@@ -16,7 +16,6 @@ type  CreatePublicationDTOType ={
 export class CreatePublicationDTO extends SecureRequest{
 
   constructor (body:CreatePublicationDTOType) {
-    console.log({body})
     super({role:body.role,uuidauth:body.uuidauth})
     this.title = body.title
     this.description = body.description
@@ -70,10 +69,14 @@ export class UpdatePublicationDTO extends CreatePublicationDTO{
 
 export class GetRelated{
 
-  constructor (category:string) {
+  constructor (category:string,publicationUuid:string) {
     this.category = category as any
+    this.publicationUuid = publicationUuid
   }
 
   @IsEnum(CategoriesEnum)
   category: CategoriesEnum;
+
+  @IsUUID()
+  publicationUuid: string;
 }

@@ -6,10 +6,12 @@ import productRoute from './src/modules/product/product.route'
 import publicationRoute from './src/modules/publication/publication.route'
 import categoriaRouter from './src/modules/categoria/categoria.router'
 import statusproductRoute from './src/modules/product/statusproduct/statusproduct.route'
+import configurationRouter from './src/modules/configuration/configuration.router'
 import Config from './src/config/configuration'
 import {ENVV} from './src/types';
 import morgan from 'morgan'
 import cors from 'cors'
+import assetRoute from './src/modules/asset/asset.route'
 
 class Server {
   private app:Application
@@ -21,6 +23,8 @@ class Server {
     products: '/api/product',
     sale: '/api/sale',
     publication: '/api/publication',
+    config: '/api/config',
+    asset: '/api/asset',
     category: '/api/category',
     statusproduct: '/api/statusproduct',
   }
@@ -58,7 +62,9 @@ class Server {
     this.app.use(this.endpoints.products, productRoute) 
     this.app.use(this.endpoints.publication, publicationRoute) 
     this.app.use(this.endpoints.category, categoriaRouter) 
+    this.app.use(this.endpoints.config, configurationRouter) 
     this.app.use(this.endpoints.statusproduct,statusproductRoute)
+    this.app.use(this.endpoints.asset,assetRoute)
 
     
   }
