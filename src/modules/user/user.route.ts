@@ -1,5 +1,6 @@
 import { Router } from 'express'
 import authMid from '../../middleware/auth.middleware'
+import getUser from '../../middleware/getUser.middlesare'
 import UserController from './user.controller'
 import {RouterInterface,Middleware} from '../../types'
 class UserRoutes implements RouterInterface {
@@ -16,7 +17,7 @@ class UserRoutes implements RouterInterface {
   private config = (): void => {
     this.router.post('/', this.controller.createUser)
     this.router.get('/',this.globalMidleware, this.controller.getUserLoggedProfile)
-    this.router.put('/:email',this.globalMidleware, this.controller.updateUser)
+    this.router.put('/',this.globalMidleware,getUser, this.controller.updateUserProfile)
     this.router.delete('/:email',this.globalMidleware, this.controller.deleteUser)
   }
 }

@@ -8,8 +8,10 @@ const getUserMid:Middleware = async (req: Request, res: Response, next: NextFunc
     const user:User = await User.findOne({
         where:{
             uuid:req.body.uuidauth
-        }
+        },
+        relations:["profile","configurationUser"]
     })
+    
 
    
     req.body.user = user

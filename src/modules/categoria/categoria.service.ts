@@ -26,7 +26,6 @@ class CategoriaService extends Service {
       const categories: Category[] = await Category.find({
         select: ['name', 'id']
       })
-      console.log({categories})
       if (categories.length === 0) {
         return {
           msg: 'There are not categories',

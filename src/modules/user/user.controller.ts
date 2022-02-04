@@ -1,7 +1,7 @@
 import { Request, Response } from 'express'
 import UserService from './user.service'
 import { ServerResponse } from '../../types'
-import { CreateUserDTO, GetUserLoggedProfileDTO, GetUserProfileDTO, UpdateUserDTO } from './user.dto'
+import { CreateUserDTO, GetUserLoggedProfileDTO, GetUserProfileDTO, UpdateUserDTO, UpdateUserProfileDTO } from './user.dto'
 import { validateOrReject } from 'class-validator'
 import { Controller } from '../interfaces/service.interface'
 
@@ -29,13 +29,36 @@ class UserController extends Controller {
       res.status(500).json({ msg: this.eH.genericHandler('createUser', e) })
     }
   }
+
+
+  public updateUserProfile = async (req: Request, res: Response): Promise<void> => {
+    try {
+
+      let response: ServerResponse = this.firsValueRes
+      const data = new UpdateUserProfileDTO(req.body)
+      await validateOrReject(data)
+        .then(async () => {
+          response = await this.userService.update(data,req)
+        })
+        .catch(e => {
+          response.msg = this.eH.validationHandler('updateUserProfile', e)
+        })
+
+      res.status(response.status).json(response)
+      return
+    } catch (e) {
+      res.status(500).json({
+        msg: 'Error!'
+      })
+    }
+  }
+
   public updateUser = async (req: Request, res: Response): Promise<void> => {
     try {
       let response: ServerResponse = this.firsValueRes
       const data = new UpdateUserDTO(req.body)
       await validateOrReject(data)
         .then(async () => {
-          console.log("OK")
           // response = await this.userService.update(data)
         })
         .catch(e => {
@@ -59,7 +82,6 @@ class UserController extends Controller {
 
       let response: ServerResponse = this.firsValueRes
       const uuid: string = req.body.uuidauth
-      console.log({uuid})
       const getProfileDTO = new GetUserLoggedProfileDTO(uuid)
 
       await validateOrReject(getProfileDTO)
@@ -67,8 +89,6 @@ class UserController extends Controller {
           response = await this.userService.getUserLoggedProfile(getProfileDTO)
         })
         .catch(e => {
-          console.log("ERROR")
-          console.log({e})
           response.msg = this.eH.validationHandler('getUserLoggedProfile', e)
         })
       res.status(200).json(response)

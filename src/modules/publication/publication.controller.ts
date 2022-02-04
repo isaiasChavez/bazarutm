@@ -20,11 +20,12 @@ class PublicationController extends Controller {
       let response: ServerResponse = this.firsValueRes
 
       const category = req.query.category
+      const query = req.query.query
       
       const realCategory:string = category ? category as string:'all' 
-      console.log({realCategory});
-      response = await this.publicationService.getAll(realCategory)
-      console.log("Solicitando todos los recursos")
+      const realQuery:string = query ? query as string:'' 
+      
+      response = await this.publicationService.getAll(realCategory,realQuery)
 
       res.status(200).json(response)
 
@@ -36,7 +37,6 @@ class PublicationController extends Controller {
 
   public getOne = async (req: Request, res: Response): Promise<void> => {
     try {
-      console.log("ONEEEEE")
 
       let response: ServerResponse = this.firsValueRes
 
@@ -52,12 +52,14 @@ class PublicationController extends Controller {
   public getRelated = async (req: Request, res: Response): Promise<void> => {
     try {
       
-
+      const publicationUuid = req.query.p as string
       let response: ServerResponse = this.firsValueRes
-
-      const dto = new GetRelated(req.params.category)
+      if (!publicationUuid) {
+        
+      }
+      const dto = new GetRelated(req.params.category,publicationUuid)
       validateOrReject(dto)
-      response = await this.publicationService.getRelated(dto.category)
+      response = await this.publicationService.getRelated(dto)
       
 
       res.status(200).json(response)
@@ -70,7 +72,6 @@ class PublicationController extends Controller {
   
   public getAllOfUser = async (req: Request, res: Response): Promise<void> => {
     try {
-      console.log("Trayendo todo del usuario")
       let response: ServerResponse = this.firsValueRes
 
       response = await this.publicationService.getAllOfUser(req)
@@ -86,8 +87,6 @@ class PublicationController extends Controller {
 
   public create = async (req: Request, res: Response): Promise<void> => {
     try {
-      console.log("Creando")
-      console.log(req.body)
 
       let response: ServerResponse = this.firsValueRes
       

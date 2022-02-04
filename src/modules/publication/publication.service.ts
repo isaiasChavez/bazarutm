@@ -1,5 +1,5 @@
 import { Category } from './../categoria/categoria.entity'
-import { CreatePublicationDTO, UpdatePublicationDTO } from './publication.dto'
+import { CreatePublicationDTO, GetRelated, UpdatePublicationDTO } from './publication.dto'
 import { ServiceReponse, ServerResponse, StatusProductEnum, CategoriesEnum } from '../../types'
 import { Publication } from './publication.entity'
 import AssetService from '../asset/asset.service'
@@ -10,6 +10,7 @@ import { StatusProduct } from '../product/statusproduct/statusproduct.entity'
 import UserService from '../user/user.service'
 import { User } from '../user/user.entity'
 import { Request } from 'express'
+import { Like, Not } from 'typeorm'
 
 class PublicationService extends Service {
   private statusOk
@@ -26,10 +27,8 @@ class PublicationService extends Service {
 
   async create(dto: CreatePublicationDTO): Promise<ServiceReponse> {
     try {
-      console.log({ dto })
       const user: User = dto.body.user
 
-      console.log({ user })
 
       const statusProduct: StatusProduct = await StatusProduct.findOne({
         where: {
@@ -48,13 +47,16 @@ class PublicationService extends Service {
       })
       await Producto.save(producto)
 
+      const imagenesParsed =  JSON.parse(dto.images)
+
       const publication = Publication.create({
         category,
-        coverPage: '',
+        coverPage: imagenesParsed[0],
         description: dto.description,
         title: dto.title,
         price: dto.price,
         producto,
+        images:dto.images,
         user,
       })
 
@@ -138,7 +140,6 @@ class PublicationService extends Service {
 
   async getOne(uuid: string): Promise<ServerResponse> {
     try {
-      console.log({ uuid })
 
       const publication = await Publication.createQueryBuilder('publication')
         .leftJoinAndSelect('publication.producto', 'producto')
@@ -157,24 +158,27 @@ class PublicationService extends Service {
           }
         }
         const userData = await  this.userService.getUserProfile({
-          email:publication.user.email
+          email:publication.user.email,
         })
+        console.log({userData});
         const response = { ...publication } as any
         
         response.status = publication.producto.statusProduct.name
         response.category = publication.category.name
-        response.user = {...response.user,...userData.data}
+        response.user = {...response.user,...userData.data.profile}
+        
         
         delete response.user.id
         delete response.producto
         delete response.id
-
-      console.log({ response })
-      /* 
-
-     /*  const assets: Asset[] = await this.assetService.getAssetsPublication(
-        publication
-      ); */
+        
+        if (!userData.data.configuration.instagram) {
+          response.user.instagram = null
+        }
+        if (!userData.data.configuration.telegram) {
+          response.user.telegram = null
+        }
+        console.log({response});
 
       return {
         msg: 'Ok',
@@ -228,17 +232,21 @@ class PublicationService extends Service {
     }
   }
 
-  async getAll(category:string): Promise<ServerResponse> {
+  async getAll(category:string,query:string): Promise<ServerResponse> {
     try {
+
       let publications : Publication[]
-      console.log({category});
+
+      const realQuery = query.toLowerCase().trim()
+
       if (category==="ALL") {
         publications = await Publication.find({
           where: {
             isActive: true,
+            title: Like(`%${realQuery}%`),
           },
           relations: ['category'],
-          select: ['title',  'description', 'isActive',"uuid"],
+          select: ['title',  'description', 'isActive',"uuid","coverPage","images"],
         })
         
       }else{
@@ -250,7 +258,7 @@ class PublicationService extends Service {
             }
           },
           relations: ['category'],
-          select: ['title',  'description', 'isActive',"uuid"],
+          select: ['title',  'description', 'isActive',"uuid","coverPage","images"],
         })
       }
       if (publications.length === 0) {
@@ -275,20 +283,24 @@ class PublicationService extends Service {
   }
 
 
-  async getRelated(category: CategoriesEnum): Promise<ServerResponse> {
+  async getRelated(dto:GetRelated): Promise<ServerResponse> {
     try {
+
 
       
       const categorySearch:Category = await Category.findOne({
         where:{
-          name:category
+          name:dto.category
         }
       })
+
+
 
       const publications: Publication[] = await Publication.find({
         where: {
           isActive: true,
-          category:categorySearch
+          category:categorySearch,
+          uuid:Not(dto.publicationUuid)
         },
         take:3
       })
@@ -332,6 +344,8 @@ class PublicationService extends Service {
           'coverPage',
           'description',
           'isActive',
+          "coverPage",
+          "images",
           'price',
           'uuid',
         ],

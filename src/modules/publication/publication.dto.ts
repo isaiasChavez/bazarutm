@@ -11,12 +11,12 @@ type  CreatePublicationDTOType ={
    description:string,
     category:string,
      status:string,
+     images:string,
       coverPage:string,price:number,role:string,uuidauth:string }
 
 export class CreatePublicationDTO extends SecureRequest{
 
   constructor (body:CreatePublicationDTOType) {
-    console.log({body})
     super({role:body.role,uuidauth:body.uuidauth})
     this.title = body.title
     this.description = body.description
@@ -24,6 +24,7 @@ export class CreatePublicationDTO extends SecureRequest{
     this.statusProduct = body.status
     this.coverPage = body.coverPage
     this.price = body.price
+    this.images =body.images
     this.body = body
   }
 
@@ -40,6 +41,9 @@ export class CreatePublicationDTO extends SecureRequest{
   @IsNotEmpty()
   @IsString()
   description: string
+
+  @IsString()
+  images: string
   @IsNotEmpty()
   category: Category | string
   @IsNotEmpty()
@@ -70,10 +74,14 @@ export class UpdatePublicationDTO extends CreatePublicationDTO{
 
 export class GetRelated{
 
-  constructor (category:string) {
+  constructor (category:string,publicationUuid:string) {
     this.category = category as any
+    this.publicationUuid = publicationUuid
   }
 
   @IsEnum(CategoriesEnum)
   category: CategoriesEnum;
+
+  @IsUUID()
+  publicationUuid: string;
 }

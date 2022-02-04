@@ -1,3 +1,4 @@
+import { ConfigurationUser } from './../configuration/configurationUser.entity';
 import {
   BaseEntity,
   Column,
@@ -51,6 +52,12 @@ export class User extends BaseEntity  {
     role => role.user
   )
   role: Role
+
+  @ManyToOne(
+    () => ConfigurationUser,
+    configurationUser => configurationUser.user
+  )
+  configurationUser: ConfigurationUser
 
 
    @OneToOne(() => Profile)
