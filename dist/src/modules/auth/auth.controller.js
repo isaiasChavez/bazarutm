@@ -23,7 +23,6 @@ class AuthController extends service_interface_1.Controller {
             try {
                 const { token } = req.params;
                 const response = this.authService.validateTokenSesion(token);
-                console.log({ response });
                 res.status(this.HTTPResponses.Ok).json(response);
             }
             catch (error) {
@@ -47,7 +46,6 @@ class AuthController extends service_interface_1.Controller {
                     return;
                 }
                 response = yield this.authService.verifyUser(data);
-                console.log({ response });
                 res.status(this.HTTPResponses.Ok).json(response);
             }
             catch (error) {

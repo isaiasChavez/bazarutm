@@ -15,7 +15,6 @@ const types_1 = require("../../types");
 const securerequest_class_1 = require("../interfaces/securerequest.class");
 class CreatePublicationDTO extends securerequest_class_1.SecureRequest {
     constructor(body) {
-        console.log({ body });
         super({ role: body.role, uuidauth: body.uuidauth });
         this.title = body.title;
         this.description = body.description;
@@ -23,6 +22,7 @@ class CreatePublicationDTO extends securerequest_class_1.SecureRequest {
         this.statusProduct = body.status;
         this.coverPage = body.coverPage;
         this.price = body.price;
+        this.images = body.images;
         this.body = body;
     }
 }
@@ -41,6 +41,10 @@ __decorate([
     (0, class_validator_1.IsString)(),
     __metadata("design:type", String)
 ], CreatePublicationDTO.prototype, "description", void 0);
+__decorate([
+    (0, class_validator_1.IsString)(),
+    __metadata("design:type", String)
+], CreatePublicationDTO.prototype, "images", void 0);
 __decorate([
     (0, class_validator_1.IsNotEmpty)(),
     __metadata("design:type", Object)
@@ -63,13 +67,18 @@ __decorate([
 ], UpdatePublicationDTO.prototype, "uuid", void 0);
 exports.UpdatePublicationDTO = UpdatePublicationDTO;
 class GetRelated {
-    constructor(category) {
+    constructor(category, publicationUuid) {
         this.category = category;
+        this.publicationUuid = publicationUuid;
     }
 }
 __decorate([
     (0, class_validator_1.IsEnum)(types_1.CategoriesEnum),
     __metadata("design:type", String)
 ], GetRelated.prototype, "category", void 0);
+__decorate([
+    (0, class_validator_1.IsUUID)(),
+    __metadata("design:type", String)
+], GetRelated.prototype, "publicationUuid", void 0);
 exports.GetRelated = GetRelated;
 //# sourceMappingURL=publication.dto.js.map

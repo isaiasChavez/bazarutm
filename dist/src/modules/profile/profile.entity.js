@@ -29,6 +29,14 @@ __decorate([
     (0, typeorm_1.Column)({
         type: 'varchar',
         nullable: false,
+        default: "https://gw.alipayobjects.com/zos/antfincdn/LlvErxo8H9/photo-1503185912284-5271ff81b9a8.webp"
+    }),
+    __metadata("design:type", String)
+], Profile.prototype, "avatar", void 0);
+__decorate([
+    (0, typeorm_1.Column)({
+        type: 'varchar',
+        nullable: false,
         length: 100
     }),
     __metadata("design:type", String)

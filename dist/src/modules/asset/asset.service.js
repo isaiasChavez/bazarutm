@@ -12,10 +12,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const multer_1 = __importDefault(require("../../libs/multer"));
 const error_helper_1 = __importDefault(require("../../helpers/error.helper"));
+const service_interface_1 = require("../interfaces/service.interface");
 const asset_entity_1 = require("./asset.entity");
-class AssetService {
+class AssetService extends service_interface_1.Service {
     constructor() {
+        super();
         this.getAssetsPublication = (publication) => __awaiter(this, void 0, void 0, function* () {
             try {
                 if (!publication.producto) {
@@ -52,6 +55,35 @@ class AssetService {
             }
         });
         this.errorHelper = new error_helper_1.default(this);
+        this.multerService = new multer_1.default();
+    }
+    uploadImage(folder, req, res) {
+        return new Promise((resolve, reject) => {
+            this.multerService.uploadSingle(folder)(req, res, error => {
+                if (error) {
+                    console.log({ error });
+                    if (error.code === 'TimeoutError') {
+                        resolve({
+                            msg: "Ha ocurrido un error al cargar tu imagen",
+                            status: this.HTTPResponses.InternalError
+                        });
+                    }
+                    resolve({
+                        msg: "Ha ocurrido un error al cargar tu imagen",
+                        status: this.HTTPResponses.InternalError
+                    });
+                    return;
+                }
+                console.log("uploadImage: ", req.file);
+                let file = req.file;
+                let urlToReturn = file.location;
+                resolve({
+                    msg: "ok",
+                    status: this.HTTPResponses.Ok,
+                    data: urlToReturn
+                });
+            });
+        });
     }
 }
 exports.default = AssetService;

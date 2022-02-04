@@ -50,6 +50,13 @@ __decorate([
 ], Publication.prototype, "description", void 0);
 __decorate([
     (0, typeorm_1.Column)({
+        type: 'varchar',
+        nullable: false,
+    }),
+    __metadata("design:type", String)
+], Publication.prototype, "images", void 0);
+__decorate([
+    (0, typeorm_1.Column)({
         type: 'boolean',
         nullable: false,
         default: true
@@ -67,7 +74,8 @@ __decorate([
 __decorate([
     (0, typeorm_1.Column)({
         type: 'varchar',
-        nullable: false
+        nullable: false,
+        default: "https://gw.alipayobjects.com/zos/antfincdn/LlvErxo8H9/photo-1503185912284-5271ff81b9a8.webp"
     }),
     __metadata("design:type", String)
 ], Publication.prototype, "coverPage", void 0);

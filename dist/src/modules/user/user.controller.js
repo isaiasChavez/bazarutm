@@ -38,13 +38,32 @@ class UserController extends service_interface_1.Controller {
                 res.status(500).json({ msg: this.eH.genericHandler('createUser', e) });
             }
         });
+        this.updateUserProfile = (req, res) => __awaiter(this, void 0, void 0, function* () {
+            try {
+                let response = this.firsValueRes;
+                const data = new user_dto_1.UpdateUserProfileDTO(req.body);
+                yield (0, class_validator_1.validateOrReject)(data)
+                    .then(() => __awaiter(this, void 0, void 0, function* () {
+                    response = yield this.userService.update(data, req);
+                }))
+                    .catch(e => {
+                    response.msg = this.eH.validationHandler('updateUserProfile', e);
+                });
+                res.status(response.status).json(response);
+                return;
+            }
+            catch (e) {
+                res.status(500).json({
+                    msg: 'Error!'
+                });
+            }
+        });
         this.updateUser = (req, res) => __awaiter(this, void 0, void 0, function* () {
             try {
                 let response = this.firsValueRes;
                 const data = new user_dto_1.UpdateUserDTO(req.body);
                 yield (0, class_validator_1.validateOrReject)(data)
                     .then(() => __awaiter(this, void 0, void 0, function* () {
-                    console.log("OK");
                 }))
                     .catch(e => {
                     response.msg = this.eH.validationHandler('updateUser', e);
@@ -62,15 +81,12 @@ class UserController extends service_interface_1.Controller {
             try {
                 let response = this.firsValueRes;
                 const uuid = req.body.uuidauth;
-                console.log({ uuid });
                 const getProfileDTO = new user_dto_1.GetUserLoggedProfileDTO(uuid);
                 yield (0, class_validator_1.validateOrReject)(getProfileDTO)
                     .then(() => __awaiter(this, void 0, void 0, function* () {
                     response = yield this.userService.getUserLoggedProfile(getProfileDTO);
                 }))
                     .catch(e => {
-                    console.log("ERROR");
-                    console.log({ e });
                     response.msg = this.eH.validationHandler('getUserLoggedProfile', e);
                 });
                 res.status(200).json(response);

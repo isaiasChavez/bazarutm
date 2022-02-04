@@ -19,6 +19,7 @@ const service_interface_1 = require("../interfaces/service.interface");
 const product_entity_1 = require("../product/product.entity");
 const statusproduct_entity_1 = require("../product/statusproduct/statusproduct.entity");
 const user_service_1 = __importDefault(require("../user/user.service"));
+const typeorm_1 = require("typeorm");
 class PublicationService extends service_interface_1.Service {
     constructor() {
         super();
@@ -32,9 +33,7 @@ class PublicationService extends service_interface_1.Service {
     create(dto) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                console.log({ dto });
                 const user = dto.body.user;
-                console.log({ user });
                 const statusProduct = yield statusproduct_entity_1.StatusProduct.findOne({
                     where: {
                         name: dto.statusProduct,
@@ -49,13 +48,15 @@ class PublicationService extends service_interface_1.Service {
                     statusProduct,
                 });
                 yield product_entity_1.Producto.save(producto);
+                const imagenesParsed = JSON.parse(dto.images);
                 const publication = publication_entity_1.Publication.create({
                     category,
-                    coverPage: '',
+                    coverPage: imagenesParsed[0],
                     description: dto.description,
                     title: dto.title,
                     price: dto.price,
                     producto,
+                    images: dto.images,
                     user,
                 });
                 yield publication_entity_1.Publication.save(publication);
@@ -132,7 +133,6 @@ class PublicationService extends service_interface_1.Service {
     getOne(uuid) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                console.log({ uuid });
                 const publication = yield publication_entity_1.Publication.createQueryBuilder('publication')
                     .leftJoinAndSelect('publication.producto', 'producto')
                     .leftJoinAndSelect('publication.category', 'category')
@@ -149,15 +149,22 @@ class PublicationService extends service_interface_1.Service {
                     };
                 }
                 const userData = yield this.userService.getUserProfile({
-                    email: publication.user.email
+                    email: publication.user.email,
                 });
+                console.log({ userData });
                 const response = Object.assign({}, publication);
                 response.status = publication.producto.statusProduct.name;
                 response.category = publication.category.name;
-                response.user = Object.assign(Object.assign({}, response.user), userData.data);
+                response.user = Object.assign(Object.assign({}, response.user), userData.data.profile);
                 delete response.user.id;
                 delete response.producto;
                 delete response.id;
+                if (!userData.data.configuration.instagram) {
+                    response.user.instagram = null;
+                }
+                if (!userData.data.configuration.telegram) {
+                    response.user.telegram = null;
+                }
                 console.log({ response });
                 return {
                     msg: 'Ok',
@@ -210,18 +217,19 @@ class PublicationService extends service_interface_1.Service {
             }
         });
     }
-    getAll(category) {
+    getAll(category, query) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 let publications;
-                console.log({ category });
+                const realQuery = query.toLowerCase().trim();
                 if (category === "ALL") {
                     publications = yield publication_entity_1.Publication.find({
                         where: {
                             isActive: true,
+                            title: (0, typeorm_1.Like)(`%${realQuery}%`),
                         },
                         relations: ['category'],
-                        select: ['title', 'description', 'isActive', "uuid"],
+                        select: ['title', 'description', 'isActive', "uuid", "coverPage", "images"],
                     });
                 }
                 else {
@@ -233,7 +241,7 @@ class PublicationService extends service_interface_1.Service {
                             }
                         },
                         relations: ['category'],
-                        select: ['title', 'description', 'isActive', "uuid"],
+                        select: ['title', 'description', 'isActive', "uuid", "coverPage", "images"],
                     });
                 }
                 if (publications.length === 0) {
@@ -256,18 +264,19 @@ class PublicationService extends service_interface_1.Service {
             }
         });
     }
-    getRelated(category) {
+    getRelated(dto) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const categorySearch = yield categoria_entity_1.Category.findOne({
                     where: {
-                        name: category
+                        name: dto.category
                     }
                 });
                 const publications = yield publication_entity_1.Publication.find({
                     where: {
                         isActive: true,
-                        category: categorySearch
+                        category: categorySearch,
+                        uuid: (0, typeorm_1.Not)(dto.publicationUuid)
                     },
                     take: 3
                 });
@@ -307,6 +316,8 @@ class PublicationService extends service_interface_1.Service {
                         'coverPage',
                         'description',
                         'isActive',
+                        "coverPage",
+                        "images",
                         'price',
                         'uuid',
                     ],

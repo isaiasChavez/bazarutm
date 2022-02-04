@@ -9,7 +9,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.CreateUserDTO = exports.UpdateUserDTO = exports.GetUserLoggedProfileDTO = exports.GetUserProfileDTO = void 0;
+exports.CreateUserDTO = exports.UpdateUserDTO = exports.UpdateUserProfileDTO = exports.GetUserLoggedProfileDTO = exports.GetUserProfileDTO = void 0;
 const class_validator_1 = require("class-validator");
 class GetUserProfileDTO {
     constructor(email) {
@@ -33,6 +33,26 @@ __decorate([
     __metadata("design:type", String)
 ], GetUserLoggedProfileDTO.prototype, "UUID", void 0);
 exports.GetUserLoggedProfileDTO = GetUserLoggedProfileDTO;
+class UpdateUserProfileDTO {
+    constructor({ telegram, instagram, phonenumber, uuidauth, role }) {
+        this.phonenumber = phonenumber;
+        this.telegram = telegram;
+        this.instagram = instagram;
+    }
+}
+__decorate([
+    (0, class_validator_1.IsNotEmpty)(),
+    __metadata("design:type", String)
+], UpdateUserProfileDTO.prototype, "phonenumber", void 0);
+__decorate([
+    (0, class_validator_1.IsNotEmpty)(),
+    __metadata("design:type", String)
+], UpdateUserProfileDTO.prototype, "telegram", void 0);
+__decorate([
+    (0, class_validator_1.IsNotEmpty)(),
+    __metadata("design:type", String)
+], UpdateUserProfileDTO.prototype, "instagram", void 0);
+exports.UpdateUserProfileDTO = UpdateUserProfileDTO;
 class UpdateUserDTO {
     constructor({ name, lastname, email, birthday, phonenumber, gender, password, uuidauth, role }) {
         this.name = name;

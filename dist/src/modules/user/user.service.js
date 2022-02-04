@@ -23,6 +23,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const configurationUser_entity_1 = require("./../configuration/configurationUser.entity");
 const user_entity_1 = require("./user.entity");
 const profile_entity_1 = require("../profile/profile.entity");
 const bcryptjs_1 = __importDefault(require("bcryptjs"));
@@ -34,19 +35,19 @@ class UserService extends service_interface_1.Service {
         super();
         this.statusOk = {
             status: this.HTTPResponses.Ok,
-            msg: 'ok'
+            msg: "ok",
         };
     }
     create(createUserDTO) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const { exist } = yield this.getUser({
-                    email: createUserDTO.email
+                    email: createUserDTO.email,
                 });
                 if (exist) {
                     return {
-                        msg: 'This email is taked',
-                        status: this.HTTPResponses.BadRequest
+                        msg: "This email is taked",
+                        status: this.HTTPResponses.BadRequest,
                     };
                 }
                 const profile = profile_entity_1.Profile.create({
@@ -54,132 +55,184 @@ class UserService extends service_interface_1.Service {
                     gender: createUserDTO.gender,
                     lastname: createUserDTO.lastname,
                     name: createUserDTO.name,
-                    phonenumber: createUserDTO.phonenumber
+                    phonenumber: createUserDTO.phonenumber,
                 });
                 yield profile_entity_1.Profile.save(profile);
                 const password = yield bcryptjs_1.default.hash(createUserDTO.password, 12);
                 const role = yield role_entity_1.Role.findOne({
                     where: {
-                        name: types_1.Roles.user
-                    }
+                        name: types_1.Roles.user,
+                    },
                 });
                 if (!role) {
                     throw new Error("No existe el rol");
                 }
+                const configurationUser = configurationUser_entity_1.ConfigurationUser.create();
+                yield configurationUser.save();
                 const user = user_entity_1.User.create({
                     email: createUserDTO.email,
                     password,
                     profile,
                     role,
-                    type: types_1.typesUser.user
+                    type: types_1.typesUser.user,
+                    configurationUser
                 });
                 yield user_entity_1.User.save(user);
                 return {
-                    msg: 'ok',
-                    status: this.HTTPResponses.OkCreated
+                    msg: "ok",
+                    status: this.HTTPResponses.OkCreated,
                 };
             }
             catch (error) {
                 return {
                     status: this.HTTPResponses.InternalError,
-                    msg: this.eH.genericHandler('createUser', error)
+                    msg: this.eH.genericHandler("createUser", error),
                 };
             }
         });
     }
-    update(updateDTO) {
+    update(updateDTO, req) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const { user, exist } = yield this.getUser({
-                    email: updateDTO.email,
-                    getProfile: true
-                });
-                if (!exist) {
-                    return {
-                        status: this.HTTPResponses.BadRequest,
-                        msg: 'user not found'
-                    };
-                }
+                const user = req.body.user;
                 let profile = user.profile;
-                if (updateDTO.name)
-                    profile.name = updateDTO.name;
-                if (updateDTO.lastname)
-                    profile.lastname = updateDTO.lastname;
-                if (updateDTO.gender)
-                    profile.gender = updateDTO.gender;
+                let userWithSameTelegram;
+                let userWithSameInstagram;
+                let userWithSamePhoneNumber;
+                const telegramHasChanged = updateDTO.telegram && profile.telegram !== updateDTO.telegram;
+                const instagramHasChanged = updateDTO.instagram && profile.instagram !== updateDTO.instagram;
+                const phoneHasChanged = updateDTO.phonenumber && profile.phonenumber !== updateDTO.phonenumber;
+                if (phoneHasChanged) {
+                    userWithSamePhoneNumber = yield user_entity_1.User.findOne({
+                        where: {
+                            profile: {
+                                phonenumber: updateDTO.phonenumber,
+                            },
+                        },
+                        relations: ["profile"]
+                    });
+                    if (!userWithSamePhoneNumber)
+                        profile.instagram = updateDTO.instagram;
+                }
+                if (telegramHasChanged) {
+                    userWithSameTelegram = yield user_entity_1.User.findOne({
+                        where: {
+                            profile: {
+                                telegram: updateDTO.telegram,
+                            },
+                        },
+                        relations: ["profile"]
+                    });
+                    if (!userWithSameTelegram)
+                        profile.telegram = updateDTO.telegram;
+                }
+                if (instagramHasChanged) {
+                    userWithSameInstagram = yield user_entity_1.User.findOne({
+                        where: {
+                            profile: {
+                                instagram: updateDTO.instagram,
+                            },
+                        },
+                        relations: ["profile"]
+                    });
+                    if (!userWithSameInstagram)
+                        profile.instagram = updateDTO.instagram;
+                }
                 if (updateDTO.phonenumber)
                     profile.phonenumber = updateDTO.phonenumber;
-                if (updateDTO.birthday)
-                    profile.birthday = new Date(updateDTO.birthday);
                 yield profile_entity_1.Profile.save(profile);
-                return this.statusOk;
+                return Object.assign(Object.assign({}, this.statusOk), { data: Object.assign({}, profile) });
             }
             catch (error) {
                 return {
                     status: this.HTTPResponses.InternalError,
-                    msg: this.eH.genericHandler('updateUser', error)
+                    msg: this.eH.genericHandler("updateUser", error),
+                };
+            }
+        });
+    }
+    updateUserAvatar(avatar, user) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                let profile = user.profile;
+                profile.avatar = avatar;
+                yield profile_entity_1.Profile.save(profile);
+                return Object.assign(Object.assign({}, this.statusOk), { data: avatar });
+            }
+            catch (error) {
+                return {
+                    status: this.HTTPResponses.InternalError,
+                    msg: this.eH.genericHandler("updateUser", error),
                 };
             }
         });
     }
     getUserLoggedProfile(getProfileDTO) {
         return __awaiter(this, void 0, void 0, function* () {
-            const { exist, profile, user } = yield this.getUser({
+            const { exist, profile, user, configuration } = yield this.getUser({
                 uuid: getProfileDTO.UUID,
-                getProfile: true
+                getProfile: true,
+                getConfiguration: true
             });
             if (!exist) {
                 return {
                     status: this.HTTPResponses.BadRequest,
-                    msg: 'user not found'
+                    msg: "user not found",
                 };
             }
-            console.log({ user, profile });
             const { CREATED_AT, id: id_ } = profile, restprofile = __rest(profile, ["CREATED_AT", "id"]);
             const { id, password, uuid, profile: _ } = user, resuser = __rest(user, ["id", "password", "uuid", "profile"]);
+            const { id: id__ } = configuration, resconfig = __rest(configuration, ["id"]);
             let data = Object.assign({}, resuser);
             data = Object.assign(Object.assign({}, data), restprofile);
-            console.log({ data });
             return Object.assign(Object.assign({}, this.statusOk), { data });
         });
     }
     getUserProfile(getProfileDTO) {
         return __awaiter(this, void 0, void 0, function* () {
-            const { exist, profile } = yield this.getUser({
+            const { exist, profile, configuration } = yield this.getUser({
                 email: getProfileDTO.email,
-                getProfile: true
+                getProfile: true,
+                getConfiguration: true
             });
             if (!exist) {
                 return {
                     status: this.HTTPResponses.BadRequest,
-                    msg: 'user not found'
+                    msg: "user not found",
                 };
             }
             const { CREATED_AT, id } = profile, rest = __rest(profile, ["CREATED_AT", "id"]);
             const data = rest;
-            return Object.assign(Object.assign({}, this.statusOk), { data });
+            return Object.assign(Object.assign({}, this.statusOk), { data: {
+                    profile: rest,
+                    configuration
+                } });
         });
     }
     getUser(data) {
         return __awaiter(this, void 0, void 0, function* () {
             let user;
+            const relations = [];
+            if (data.getProfile)
+                relations.push('profile');
+            if (data.getConfiguration)
+                relations.push('configurationUser');
             if (data.email) {
                 user = yield user_entity_1.User.findOne({
                     where: { email: data.email },
-                    relations: data.getProfile ? ['profile'] : []
+                    relations,
                 });
             }
             if (data.uuid) {
                 user = yield user_entity_1.User.findOne({
                     where: { uuid: data.uuid },
-                    relations: data.getProfile ? ['profile'] : []
+                    relations
                 });
-                console.log({ user });
             }
             if (!user) {
                 return { exist: false };
             }
-            return { exist: true, user, profile: user.profile };
+            return { exist: true, user, profile: user.profile, configuration: user.configurationUser };
         });
     }
     delete(userEmail) {
@@ -187,14 +240,13 @@ class UserService extends service_interface_1.Service {
             try {
                 const user = yield user_entity_1.User.findOne({
                     where: {
-                        email: userEmail
-                    }
+                        email: userEmail,
+                    },
                 });
-                console.log({ user });
                 if (!user) {
                     return {
                         status: this.HTTPResponses.BadRequest,
-                        msg: 'user not found'
+                        msg: "user not found",
                     };
                 }
                 yield user_entity_1.User.remove(user);
@@ -203,7 +255,7 @@ class UserService extends service_interface_1.Service {
             catch (error) {
                 return {
                     status: this.HTTPResponses.InternalError,
-                    msg: this.eH.genericHandler("updateProduct", error)
+                    msg: this.eH.genericHandler("updateProduct", error),
                 };
             }
         });

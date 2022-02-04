@@ -24,10 +24,10 @@ class PublicationController extends service_interface_1.Controller {
             try {
                 let response = this.firsValueRes;
                 const category = req.query.category;
+                const query = req.query.query;
                 const realCategory = category ? category : 'all';
-                console.log({ realCategory });
-                response = yield this.publicationService.getAll(realCategory);
-                console.log("Solicitando todos los recursos");
+                const realQuery = query ? query : '';
+                response = yield this.publicationService.getAll(realCategory, realQuery);
                 res.status(200).json(response);
             }
             catch (e) {
@@ -36,7 +36,6 @@ class PublicationController extends service_interface_1.Controller {
         });
         this.getOne = (req, res) => __awaiter(this, void 0, void 0, function* () {
             try {
-                console.log("ONEEEEE");
                 let response = this.firsValueRes;
                 response = yield this.publicationService.getOne(req.params.uuid);
                 res.status(200).json(response);
@@ -47,10 +46,13 @@ class PublicationController extends service_interface_1.Controller {
         });
         this.getRelated = (req, res) => __awaiter(this, void 0, void 0, function* () {
             try {
+                const publicationUuid = req.query.p;
                 let response = this.firsValueRes;
-                const dto = new publication_dto_1.GetRelated(req.params.category);
+                if (!publicationUuid) {
+                }
+                const dto = new publication_dto_1.GetRelated(req.params.category, publicationUuid);
                 (0, class_validator_1.validateOrReject)(dto);
-                response = yield this.publicationService.getRelated(dto.category);
+                response = yield this.publicationService.getRelated(dto);
                 res.status(200).json(response);
             }
             catch (e) {
@@ -59,7 +61,6 @@ class PublicationController extends service_interface_1.Controller {
         });
         this.getAllOfUser = (req, res) => __awaiter(this, void 0, void 0, function* () {
             try {
-                console.log("Trayendo todo del usuario");
                 let response = this.firsValueRes;
                 response = yield this.publicationService.getAllOfUser(req);
                 res.status(response.status).json(response);
@@ -70,8 +71,6 @@ class PublicationController extends service_interface_1.Controller {
         });
         this.create = (req, res) => __awaiter(this, void 0, void 0, function* () {
             try {
-                console.log("Creando");
-                console.log(req.body);
                 let response = this.firsValueRes;
                 const data = new publication_dto_1.CreatePublicationDTO(req.body);
                 yield (0, class_validator_1.validateOrReject)(data)

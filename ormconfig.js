@@ -1,11 +1,10 @@
 module.exports = {
   type: 'postgres',
-  host: 'bazarutm-do-user-10684883-0.b.db.ondigitalocean.com',
-  port: '25060',
-  username: 'doadmin',
-  password: 'wAMVrsYA0Xlpzkum',
-  
-  database: 'defaultdb',
+  host: process.env.TYPEORM_HOST,
+  port: process.env.TYPEORM_PORT,
+  username: process.env.TYPEORM_USERNAME,
+  password: process.env.TYPEORM_PASSWORD,
+  database: process.env.TYPEORM_DATABASE,
   entities: ['dist/src/modules/**/*{.entity.ts,.entity.js}'],
   migrationTableName: 'migrations',
   migrations: [

@@ -15,7 +15,8 @@ const getUserMid = (req, res, next) => __awaiter(void 0, void 0, void 0, functio
         const user = yield user_entity_1.User.findOne({
             where: {
                 uuid: req.body.uuidauth
-            }
+            },
+            relations: ["profile", "configurationUser"]
         });
         req.body.user = user;
         next();

@@ -29,6 +29,14 @@ class Config {
             this.configDevelopment();
         }
     }
+    get(variable) {
+        console.log("getting", { variable });
+        const response = this.environment[variable];
+        if (!response) {
+            throw new Error('env variable does not exist, please be shure of create one');
+        }
+        return response;
+    }
 }
 const config = new Config();
 exports.default = config;

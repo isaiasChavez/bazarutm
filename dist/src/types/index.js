@@ -42,5 +42,9 @@ var ENVV;
 (function (ENVV) {
     ENVV["PORT"] = "PORT";
     ENVV["SECRET"] = "SECRET";
+    ENVV["BUCKET_NAME"] = "BUCKET_NAME";
+    ENVV["AWS_ACCESS_KEY_ID"] = "AWS_ACCESS_KEY_ID";
+    ENVV["AWA_SECRET_ACCESS_KEY"] = "AWA_SECRET_ACCESS_KEY";
+    ENVV["S3_ENDPOINT"] = "S3_ENDPOINT";
 })(ENVV = exports.ENVV || (exports.ENVV = {}));
 //# sourceMappingURL=index.js.map

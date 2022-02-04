@@ -39,7 +39,9 @@ const product_route_1 = __importDefault(require("./src/modules/product/product.r
 const publication_route_1 = __importDefault(require("./src/modules/publication/publication.route"));
 const categoria_router_1 = __importDefault(require("./src/modules/categoria/categoria.router"));
 const statusproduct_route_1 = __importDefault(require("./src/modules/product/statusproduct/statusproduct.route"));
+const configuration_router_1 = __importDefault(require("./src/modules/configuration/configuration.router"));
 const cors_1 = __importDefault(require("cors"));
+const asset_route_1 = __importDefault(require("./src/modules/asset/asset.route"));
 class Server {
     constructor(init) {
         this.endpoints = {
@@ -49,6 +51,8 @@ class Server {
             products: '/api/product',
             sale: '/api/sale',
             publication: '/api/publication',
+            config: '/api/config',
+            asset: '/api/asset',
             category: '/api/category',
             statusproduct: '/api/statusproduct',
         };
@@ -88,7 +92,9 @@ class Server {
         this.app.use(this.endpoints.products, product_route_1.default);
         this.app.use(this.endpoints.publication, publication_route_1.default);
         this.app.use(this.endpoints.category, categoria_router_1.default);
+        this.app.use(this.endpoints.config, configuration_router_1.default);
         this.app.use(this.endpoints.statusproduct, statusproduct_route_1.default);
+        this.app.use(this.endpoints.asset, asset_route_1.default);
     }
     lauchServer() {
         return __awaiter(this, void 0, void 0, function* () {

@@ -37,7 +37,6 @@ class CategoriaService extends service_interface_1.Service {
                 const categories = yield categoria_entity_1.Category.find({
                     select: ['name', 'id']
                 });
-                console.log({ categories });
                 if (categories.length === 0) {
                     return {
                         msg: 'There are not categories',
