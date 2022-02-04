@@ -40,6 +40,13 @@ export class Publication extends BaseEntity {
   })
   description: string
 
+
+  @Column({
+    type: 'varchar',
+    nullable: false,
+  })
+  images: string
+
   @Column({
     type: 'boolean',
     nullable: false,
@@ -52,6 +59,7 @@ export class Publication extends BaseEntity {
     category => category.publication
   )
   category: Category
+  
 
   @ManyToOne(
     () => User,
@@ -61,7 +69,8 @@ export class Publication extends BaseEntity {
 
   @Column({
     type: 'varchar',
-    nullable: false
+    nullable: false,
+    default:"https://gw.alipayobjects.com/zos/antfincdn/LlvErxo8H9/photo-1503185912284-5271ff81b9a8.webp"
   })
   coverPage: string
 

@@ -47,13 +47,16 @@ class PublicationService extends Service {
       })
       await Producto.save(producto)
 
+      const imagenesParsed =  JSON.parse(dto.images)
+
       const publication = Publication.create({
         category,
-        coverPage: '',
+        coverPage: imagenesParsed[0],
         description: dto.description,
         title: dto.title,
         price: dto.price,
         producto,
+        images:dto.images,
         user,
       })
 
@@ -243,7 +246,7 @@ class PublicationService extends Service {
             title: Like(`%${realQuery}%`),
           },
           relations: ['category'],
-          select: ['title',  'description', 'isActive',"uuid"],
+          select: ['title',  'description', 'isActive',"uuid","coverPage","images"],
         })
         
       }else{
@@ -255,7 +258,7 @@ class PublicationService extends Service {
             }
           },
           relations: ['category'],
-          select: ['title',  'description', 'isActive',"uuid"],
+          select: ['title',  'description', 'isActive',"uuid","coverPage","images"],
         })
       }
       if (publications.length === 0) {
@@ -341,6 +344,8 @@ class PublicationService extends Service {
           'coverPage',
           'description',
           'isActive',
+          "coverPage",
+          "images",
           'price',
           'uuid',
         ],

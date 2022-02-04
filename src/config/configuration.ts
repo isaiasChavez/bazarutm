@@ -10,11 +10,14 @@ class Config {
     optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
   }
   constructor () {
-    const variables = dotenv.config()
+    /* const variables = dotenv.config()
     if (variables.error) {
       throw new Error('.env file does not exist, please create one')
-    }
-    this.environment = dotenv.config().parsed
+    } */
+
+
+    this.environment = process.env
+    console.log(this.environment);
     
     if (this.environment.ENVIROMENT === 'production') {
       this.configProduction()

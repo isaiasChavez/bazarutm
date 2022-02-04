@@ -17,6 +17,7 @@ class AssetRoutes implements RouterInterface{
   }
   private config (): void {
     this.router.post('/profile',this.globalMidleware,getUserMid,this.controller.uploadProfilePicture)
+    this.router.post('/asset',this.globalMidleware,this.controller.uploadAsset)
   }
 }
 

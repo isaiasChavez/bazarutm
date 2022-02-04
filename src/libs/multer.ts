@@ -44,7 +44,7 @@ class MulterService {
             `${folder}/${Date.now().toString()}-${file.originalname.replace(
               /\s+/g,
               ""
-            )}`
+            ).trim()}`
           );
         },
       }),

@@ -11,6 +11,7 @@ type  CreatePublicationDTOType ={
    description:string,
     category:string,
      status:string,
+     images:string,
       coverPage:string,price:number,role:string,uuidauth:string }
 
 export class CreatePublicationDTO extends SecureRequest{
@@ -23,6 +24,7 @@ export class CreatePublicationDTO extends SecureRequest{
     this.statusProduct = body.status
     this.coverPage = body.coverPage
     this.price = body.price
+    this.images =body.images
     this.body = body
   }
 
@@ -39,6 +41,9 @@ export class CreatePublicationDTO extends SecureRequest{
   @IsNotEmpty()
   @IsString()
   description: string
+
+  @IsString()
+  images: string
   @IsNotEmpty()
   category: Category | string
   @IsNotEmpty()
