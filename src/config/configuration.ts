@@ -17,7 +17,6 @@ class Config {
 
     this.environment = dotenv.config().parsed
 
-    console.log("this.environment:",this.environment);
     
     if (this.environment.ENVIROMENT === 'production') {
       this.configProduction()
@@ -34,7 +33,6 @@ class Config {
   }
 
   public get (variable: ENVV): string {
-    console.log("getting",{variable});
     const response = this.environment[variable]
     if (!response) {
       throw new Error(

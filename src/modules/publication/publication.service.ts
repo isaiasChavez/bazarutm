@@ -241,6 +241,7 @@ class PublicationService extends Service {
 
       if (category==="ALL") {
         publications = await Publication.find({
+          
           where: {
             isActive: true,
             title: Like(`%${realQuery}%`),

@@ -13,6 +13,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const user_service_1 = __importDefault(require("./user.service"));
+const types_1 = require("../../types");
 const user_dto_1 = require("./user.dto");
 const class_validator_1 = require("class-validator");
 const service_interface_1 = require("../interfaces/service.interface");
@@ -20,13 +21,42 @@ class UserController extends service_interface_1.Controller {
     constructor() {
         super();
         this.firsValueRes = { status: 400, data: null, msg: 'ok' };
+        this.getAll = (req, res) => __awaiter(this, void 0, void 0, function* () {
+            try {
+                let response = this.firsValueRes;
+                response = yield this.userService.getAll();
+                res.status(response.status).json(response);
+                return;
+            }
+            catch (e) {
+                res.status(500).json({ msg: this.eH.genericHandler('getAll', e) });
+            }
+        });
         this.createUser = (req, res) => __awaiter(this, void 0, void 0, function* () {
             try {
                 let response = this.firsValueRes;
                 const data = new user_dto_1.CreateUserDTO(req.body);
                 yield (0, class_validator_1.validateOrReject)(data)
                     .then(() => __awaiter(this, void 0, void 0, function* () {
-                    response = yield this.userService.create(data);
+                    response = yield this.userService.create(data, types_1.Roles.user);
+                }))
+                    .catch(e => {
+                    response.msg = this.eH.validationHandler('createUser', e);
+                });
+                res.status(response.status).json(response);
+                return;
+            }
+            catch (e) {
+                res.status(500).json({ msg: this.eH.genericHandler('createUser', e) });
+            }
+        });
+        this.createAdmin = (req, res) => __awaiter(this, void 0, void 0, function* () {
+            try {
+                let response = this.firsValueRes;
+                const data = new user_dto_1.CreateUserDTO(req.body);
+                yield (0, class_validator_1.validateOrReject)(data)
+                    .then(() => __awaiter(this, void 0, void 0, function* () {
+                    response = yield this.userService.create(data, types_1.Roles.admin);
                 }))
                     .catch(e => {
                     response.msg = this.eH.validationHandler('createUser', e);

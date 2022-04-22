@@ -23,7 +23,26 @@ class UserService extends Service {
     super();
   }
 
-  public async create(createUserDTO: CreateUserDTO): Promise<ServiceReponse> {
+
+
+
+  public async getAll(): Promise<ServerResponse> {
+
+      const users:User[] = await User.createQueryBuilder('user')
+        .select("user.email")
+        .leftJoin('user.profile', 'profile')
+        .addSelect('profile.name')
+        .getMany()
+    
+
+    return {
+      ...this.statusOk,
+      data:{
+        users
+      }
+    }
+  }
+  public async create(createUserDTO: CreateUserDTO,role:Roles): Promise<ServiceReponse> {
     try {
       const { exist } = await this.getUser({
         email: createUserDTO.email,
@@ -36,7 +55,7 @@ class UserService extends Service {
         };
       }
       const profile: Profile = Profile.create({
-        birthday: new Date(),
+        birthday: new Date(createUserDTO.birthday),
         gender: createUserDTO.gender,
         lastname: createUserDTO.lastname,
         name: createUserDTO.name,
@@ -47,12 +66,13 @@ class UserService extends Service {
 
       const password: string = await bcrypt.hash(createUserDTO.password, 12);
 
-      const role = await Role.findOne({
+      const roleUser = await Role.findOne({
         where: {
-          name: Roles.user,
+          name: role,
         },
       });
-      if (!role) {
+
+      if (!roleUser) {
         throw new Error("No existe el rol");
       }
 
@@ -63,7 +83,7 @@ class UserService extends Service {
         email: createUserDTO.email,
         password,
         profile,
-        role,
+        role:roleUser,
         type: typesUser.user,
         configurationUser
       });
@@ -81,6 +101,7 @@ class UserService extends Service {
       };
     }
   }
+
   public async update(
     updateDTO: UpdateUserProfileDTO,
     req: Request

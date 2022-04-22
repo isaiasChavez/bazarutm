@@ -1,6 +1,6 @@
 import { Request, Response } from 'express'
 import UserService from './user.service'
-import { ServerResponse } from '../../types'
+import { Roles, ServerResponse } from '../../types'
 import { CreateUserDTO, GetUserLoggedProfileDTO, GetUserProfileDTO, UpdateUserDTO, UpdateUserProfileDTO } from './user.dto'
 import { validateOrReject } from 'class-validator'
 import { Controller } from '../interfaces/service.interface'
@@ -12,13 +12,25 @@ class UserController extends Controller {
     super()
     this.userService = new UserService()
   }
+
+  public getAll = async (req: Request, res: Response): Promise<void> => {
+    try {
+      let response: ServerResponse = this.firsValueRes
+      response = await this.userService.getAll()
+      res.status(response.status).json(response)
+
+      return
+    } catch (e) {
+      res.status(500).json({ msg: this.eH.genericHandler('getAll', e) })
+    }
+  }
   public createUser = async (req: Request, res: Response): Promise<void> => {
     try {
       let response: ServerResponse = this.firsValueRes
       const data = new CreateUserDTO(req.body)
       await validateOrReject(data)
         .then(async () => {
-          response = await this.userService.create(data)
+          response = await this.userService.create(data,Roles.user)
         })
         .catch(e => {
           response.msg = this.eH.validationHandler('createUser', e)
@@ -29,6 +41,27 @@ class UserController extends Controller {
       res.status(500).json({ msg: this.eH.genericHandler('createUser', e) })
     }
   }
+
+  public createAdmin = async (req: Request, res: Response): Promise<void> => {
+    try {
+      let response: ServerResponse = this.firsValueRes
+
+      const data = new CreateUserDTO(req.body)
+
+      await validateOrReject(data)
+        .then(async () => {
+          response = await this.userService.create(data,Roles.admin)
+        })
+        .catch(e => {
+          response.msg = this.eH.validationHandler('createUser', e)
+        })
+      res.status(response.status).json(response)
+      return
+    } catch (e) {
+      res.status(500).json({ msg: this.eH.genericHandler('createUser', e) })
+    }
+  }
+
 
 
   public updateUserProfile = async (req: Request, res: Response): Promise<void> => {

@@ -13,6 +13,7 @@ class UserRoutes {
         this.route = '/api/user';
         this.config = () => {
             this.router.post('/', this.controller.createUser);
+            this.router.get('/all', this.controller.getAll);
             this.router.get('/', this.globalMidleware, this.controller.getUserLoggedProfile);
             this.router.put('/', this.globalMidleware, getUser_middlesare_1.default, this.controller.updateUserProfile);
             this.router.delete('/:email', this.globalMidleware, this.controller.deleteUser);

@@ -38,7 +38,19 @@ class UserService extends service_interface_1.Service {
             msg: "ok",
         };
     }
-    create(createUserDTO) {
+    getAll() {
+        return __awaiter(this, void 0, void 0, function* () {
+            const users = yield user_entity_1.User.createQueryBuilder('user')
+                .select("user.email")
+                .leftJoin('user.profile', 'profile')
+                .addSelect('profile.name')
+                .getMany();
+            return Object.assign(Object.assign({}, this.statusOk), { data: {
+                    users
+                } });
+        });
+    }
+    create(createUserDTO, role) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const { exist } = yield this.getUser({
@@ -51,7 +63,7 @@ class UserService extends service_interface_1.Service {
                     };
                 }
                 const profile = profile_entity_1.Profile.create({
-                    birthday: new Date(),
+                    birthday: new Date(createUserDTO.birthday),
                     gender: createUserDTO.gender,
                     lastname: createUserDTO.lastname,
                     name: createUserDTO.name,
@@ -59,12 +71,12 @@ class UserService extends service_interface_1.Service {
                 });
                 yield profile_entity_1.Profile.save(profile);
                 const password = yield bcryptjs_1.default.hash(createUserDTO.password, 12);
-                const role = yield role_entity_1.Role.findOne({
+                const roleUser = yield role_entity_1.Role.findOne({
                     where: {
-                        name: types_1.Roles.user,
+                        name: role,
                     },
                 });
-                if (!role) {
+                if (!roleUser) {
                     throw new Error("No existe el rol");
                 }
                 const configurationUser = configurationUser_entity_1.ConfigurationUser.create();
@@ -73,7 +85,7 @@ class UserService extends service_interface_1.Service {
                     email: createUserDTO.email,
                     password,
                     profile,
-                    role,
+                    role: roleUser,
                     type: types_1.typesUser.user,
                     configurationUser
                 });
